@@ -1,0 +1,56 @@
+ScreenManager:
+    NewEntityWindow:
+    AddAreaWindow:
+    AddWhatsappWindow:
+    ValidateWhatsappWindow:
+    ShareCodeWindow:
+
+
+# BoxLayout con Toolbar que se usa de base en todas las pantallas
+<BaseScreen@MDBoxLayout>:
+    orientation: "vertical"
+    MDToolbar:
+        title: "GuazuApp"
+        md_bg_color: 94/255, 53/255, 177/255, 1
+        left_action_items: [["menu", lambda x: app.callback1_()]]
+        right_action_items: [["information", lambda x: app.callback_2()], ["dots-vertical", lambda x: app.callback_3()]]
+
+
+<NewEntityWindow>:
+    name: "new_entity"
+    BaseScreen:
+        MDLabel:
+            text: "Content"
+            halign: "center"
+
+
+<AddAreaWindow>:
+    name: "add_area"
+    BaseScreen:
+        MDLabel:
+            text: "Content"
+            halign: "center"
+
+
+<AddWhatsappWindow>:
+    name: "add_whatsapp"
+    BaseScreen:
+        MDLabel:
+            text: "Content"
+            halign: "center"
+
+
+<ValidateWhatsappWindow>:
+    name: "validate_whatsapp"
+    BaseScreen:
+        MDLabel:
+            text: "Content"
+            halign: "center"
+
+
+<ShareCodeWindow>:
+    name: "share_code"
+    BaseScreen:
+        MDLabel:
+            text: "Content"
+            halign: "center"
