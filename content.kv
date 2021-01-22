@@ -7,50 +7,175 @@ ScreenManager:
 
 
 # BoxLayout con Toolbar que se usa de base en todas las pantallas
-<BaseScreen@MDBoxLayout>:
-    orientation: "vertical"
+<BaseLayout@MDBoxLayout>:
+    orientation: 'vertical'
     MDToolbar:
         title: "GuazuApp"
+        pos_hint:{'center_x': 0.5, 'top': 1}
         md_bg_color: 94/255, 53/255, 177/255, 1
         left_action_items: [["menu", lambda x: app.callback1_()]]
         right_action_items: [["information", lambda x: app.callback_2()], ["dots-vertical", lambda x: app.callback_3()]]
+# TODO hacer PROGRESSBAR
+<CommonTextField@MDTextField>:
+    size_hint: 0.75, 0.14
+    multiline: False
+    required: True
+    max_text_length: 32
+    helper_text: "This field is required"
 
+<LabelButton@ButtonBehavior+MDLabel>:
 
 <NewEntityWindow>:
     name: "new_entity"
-    BaseScreen:
-        MDLabel:
-            text: "Content"
-            halign: "center"
+    widget_count : 5
+    BaseLayout:
+        MDFloatLayout:
+            MDLabel:
+                text: "Create new entity"
+                halign: 'center'
+                pos_hint:{'center_y': (5/root.widget_count)-0.1}
+            CommonTextField:
+                # id: text_field_error
+                hint_text: "Name of your organization"
+                helper_text_mode: "on_error"
+                pos_hint:{'center_x': 0.5, 'center_y': (4/root.widget_count)-0.1}
+            CommonTextField:
+                # id: text_field_error
+                icon_right: "at"
+                hint_text: "Id name of the entity"
+                helper_text_mode: "on_error"
+                pos_hint:{'center_x': 0.5, 'center_y': (3/root.widget_count)-0.1}
+            MDLabel:
+                text: "More options"
+                halign: 'center'
+                pos_hint:{'center_y': (2/root.widget_count)-0.1}
+            MDFlatButton:
+                text: "Create entity"
+                pos_hint:{'center_x': 0.5, 'center_y': (1/root.widget_count)-0.1}
+                md_bg_color: 94/255, 53/255, 177/255, 1
+                text_color: 1, 1, 1, 1
+                on_release:
+                    app.root.current = "add_area"
+                    root.manager.transition.direction = "left"
 
 
 <AddAreaWindow>:
     name: "add_area"
-    BaseScreen:
-        MDLabel:
-            text: "Content"
-            halign: "center"
+    widget_count : 4
+    BaseLayout:
+        MDFloatLayout:
+            MDLabel:
+                text: "Add areas to entity"
+                halign: 'center'
+                pos_hint:{'center_y': (4/root.widget_count)-0.1}
+            CommonTextField:
+                # id: text_field_error
+                hint_text: "Name of the area"
+                helper_text_mode: "on_error"
+                pos_hint:{'center_x': 0.5, 'center_y': (3/root.widget_count)-0.1}
+            MDFlatButton:
+                text: "Add"
+                pos_hint:{'center_x': 0.5, 'center_y': (2/root.widget_count)-0.1}
+                md_bg_color: 94/255, 53/255, 177/255, 1
+                text_color: 1, 1, 1, 1
+                on_release:
+                    app.root.current = "add_whatsapp"
+                    root.manager.transition.direction = "left"
+            # TODO agregar SCROLLVIEW
+            LabelButton:
+                text: "Done"
+                halign: 'center'
+                pos_hint:{'center_y': (1/root.widget_count)-0.1}
+                on_release:
+                    app.root.current = "add_whatsapp"
+                    root.manager.transition.direction = "left"
+
 
 
 <AddWhatsappWindow>:
     name: "add_whatsapp"
-    BaseScreen:
-        MDLabel:
-            text: "Content"
-            halign: "center"
+    widget_count : 4
+    BaseLayout:
+        MDFloatLayout:
+            MDLabel:
+                text: "Add Whatsapp number"
+                halign: 'center'
+                pos_hint:{'center_y': (4/root.widget_count)-0.1}
+            CommonTextField:
+                # id: text_field_error
+                hint_text: "Name of the area"
+                helper_text_mode: "on_error"
+                pos_hint:{'center_x': 0.5, 'center_y': (3/root.widget_count)-0.1}
+            MDFlatButton:
+                text: "Add"
+                pos_hint:{'center_x': 0.5, 'center_y': (2/root.widget_count)-0.1}
+                md_bg_color: 94/255, 53/255, 177/255, 1
+                text_color: 1, 1, 1, 1
+                on_release:
+                    app.root.current = "add_whatsapp"
+                    root.manager.transition.direction = "left"
+            # TODO agregar SCROLLVIEW
+            LabelButton:
+                text: "Next"
+                halign: 'center'
+                pos_hint:{'center_y': (1/root.widget_count)-0.1}
+                on_release:
+                    app.root.current = "validate_whatsapp"
+                    root.manager.transition.direction = "left"
 
 
 <ValidateWhatsappWindow>:
     name: "validate_whatsapp"
-    BaseScreen:
-        MDLabel:
-            text: "Content"
-            halign: "center"
+    widget_count : 4
+    BaseLayout:
+        MDFloatLayout:
+            MDLabel:
+                text: "Validate Whatsapp number"
+                halign: 'center'
+                pos_hint:{'center_y': (4/root.widget_count)-0.1}
+            # TODO agregar texto Scan the code from your organization's phone with the Whatsapp App
+            MDIconButton:
+                icon: "refresh-circle"
+                user_font_size: "48sp"
+                pos_hint:{'center_x': 0.5, 'center_y': (2/root.widget_count)-0.1}
+                theme_text_color: 'Primary'  # 94/255, 53/255, 177/255, 1
+#                on_release:
+#                    app.root.current = "add_whatsapp"
+#                    root.manager.transition.direction = "left"
+            # TODO agregar SCROLLVIEW
+            LabelButton:
+                text: "Done"
+                halign: 'center'
+                pos_hint:{'center_y': (1/root.widget_count)-0.1}
+                on_release:
+                    app.root.current = "share_code"
+                    root.manager.transition.direction = "left"
+
 
 
 <ShareCodeWindow>:
     name: "share_code"
-    BaseScreen:
-        MDLabel:
-            text: "Content"
-            halign: "center"
+    widget_count : 4
+    BaseLayout:
+        MDFloatLayout:
+            MDLabel:
+                text: "Share your codes of subscriptions"
+                halign: 'center'
+                pos_hint:{'center_y': (4/root.widget_count)-0.1}
+            # TODO agregar texto Scan the code from your organization's phone with the Whatsapp App
+            MDIconButton:
+                icon: "refresh-circle"
+                user_font_size: "48sp"
+                pos_hint:{'center_x': 0.5, 'center_y': (2/root.widget_count)-0.1}
+                theme_text_color: 'Primary'  # 94/255, 53/255, 177/255, 1
+#                on_release:
+#                    app.root.current = "add_whatsapp"
+#                    root.manager.transition.direction = "left"
+            # TODO agregar SCROLLVIEW
+            LabelButton:
+                text: "Done"
+                halign: 'center'
+                pos_hint:{'center_y': (1/root.widget_count)-0.1}
+                on_release:
+                    app.root.current = "new_entity"
+                    root.manager.transition.direction = "left"
