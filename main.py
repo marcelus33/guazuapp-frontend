@@ -1,10 +1,17 @@
 from kivy.lang import Builder
 from kivy.uix.anchorlayout import AnchorLayout
+from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.label import Label
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivymd.app import MDApp
+from kivymd.uix.slider import MDSlider
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.toolbar import MDToolbar
+
+
+class CircularButton(Label):
+    pass
 
 
 class NewEntityWindow(Screen):

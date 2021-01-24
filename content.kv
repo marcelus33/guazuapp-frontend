@@ -5,6 +5,7 @@ ScreenManager:
     ValidateWhatsappWindow:
     ShareCodeWindow:
 
+#:set primary_color (94/255, 53/255, 177/255, 1)
 
 # BoxLayout con Toolbar que se usa de base en todas las pantallas
 <BaseLayout@MDBoxLayout>:
@@ -12,7 +13,7 @@ ScreenManager:
     MDToolbar:
         title: "GuazuApp"
         pos_hint:{'center_x': 0.5, 'top': 1}
-        md_bg_color: 94/255, 53/255, 177/255, 1
+        md_bg_color: primary_color
         left_action_items: [["menu", lambda x: app.callback1_()]]
         right_action_items: [["information", lambda x: app.callback_2()], ["dots-vertical", lambda x: app.callback_3()]]
 # TODO hacer PROGRESSBAR
@@ -25,6 +26,20 @@ ScreenManager:
 
 <LabelButton@ButtonBehavior+MDLabel>:
 
+<CircularButton>:
+    # Creating Circular button
+    canvas:
+        # Color is different if button is pressed
+        Color:
+            rgb: primary_color
+        # Rounded rectangle canvas
+        RoundedRectangle:
+            # Giving the size and the position
+            size: (20, 20)
+            pos: (self.pos)
+            # This will force the rectangle to be the circle
+            radius: [400, ]
+
 <NewEntityWindow>:
     name: "new_entity"
     widget_count : 5
@@ -34,6 +49,20 @@ ScreenManager:
                 text: "Create new entity"
                 halign: 'center'
                 pos_hint:{'center_y': (5/root.widget_count)-0.1}
+
+            MDBoxLayout:
+                size_hint: .7, .15
+                pos_hint:{'center_y': (4.5/root.widget_count)-0.1, 'center_x': 0.5}
+                pos: (4.5/root.widget_count)-0.1, 1
+                canvas.before:
+                    Color:
+                        rgba: 1, 0, 0, 1
+                    Line:
+                        width: 2
+                        rectangle: self.x, self.y, self.width, self.height
+                CircularButton:
+                    pos_hint:{'center_y': (4.5/root.widget_count)-0.1}
+
             CommonTextField:
                 # id: text_field_error
                 hint_text: "Name of your organization"
@@ -48,10 +77,10 @@ ScreenManager:
             MDLabel:
                 text: "More options"
                 halign: 'center'
-                pos_hint:{'center_y': (2/root.widget_count)-0.1}
+                pos_hint:{'center_y': (1.5/root.widget_count)-0.1}
             MDFlatButton:
                 text: "Create entity"
-                pos_hint:{'center_x': 0.5, 'center_y': (1/root.widget_count)-0.1}
+                pos_hint:{'center_x': 0.5, 'center_y': (2/root.widget_count)-0.1}
                 md_bg_color: 94/255, 53/255, 177/255, 1
                 text_color: 1, 1, 1, 1
                 on_release:
@@ -76,7 +105,7 @@ ScreenManager:
             MDFlatButton:
                 text: "Add"
                 pos_hint:{'center_x': 0.5, 'center_y': (2/root.widget_count)-0.1}
-                md_bg_color: 94/255, 53/255, 177/255, 1
+                md_bg_color: primary_color
                 text_color: 1, 1, 1, 1
                 on_release:
                     app.root.current = "add_whatsapp"
