@@ -6,6 +6,8 @@ ScreenManager:
     ShareCodeWindow:
 
 #:set primary_color (94/255, 53/255, 177/255, 1)
+#:set inactive_color (220/255, 220/255, 220/255, 1)
+
 
 # BoxLayout con Toolbar que se usa de base en todas las pantallas
 <BaseLayout@MDBoxLayout>:
@@ -16,7 +18,8 @@ ScreenManager:
         md_bg_color: primary_color
         left_action_items: [["menu", lambda x: app.callback1_()]]
         right_action_items: [["information", lambda x: app.callback_2()], ["dots-vertical", lambda x: app.callback_3()]]
-# TODO hacer PROGRESSBAR
+
+
 <CommonTextField@MDTextField>:
     size_hint: 0.75, 0.14
     multiline: False
@@ -24,21 +27,50 @@ ScreenManager:
     max_text_length: 32
     helper_text: "This field is required"
 
+
 <LabelButton@ButtonBehavior+MDLabel>:
 
+
+<AnimatedProgressBar>:
+    color: primary_color
+
+
 <CircularButton>:
-    # Creating Circular button
     canvas:
-        # Color is different if button is pressed
         Color:
-            rgb: primary_color
-        # Rounded rectangle canvas
+            rgb: primary_color if self.active else inactive_color
         RoundedRectangle:
-            # Giving the size and the position
             size: (20, 20)
             pos: (self.pos)
-            # This will force the rectangle to be the circle
             radius: [400, ]
+    pos_hint:{'center_y': (1)-0.14}
+    size_hint_x: None
+    width: 19.5
+
+
+<ProgressComponent>:
+    size_hint: .7, .15
+    steps: 5
+    step: 0
+    pos_hint:{'center_y': (4.5/root.steps)-0.1, 'center_x': 0.5}
+    # 'debug' border
+#    canvas.before:
+#        Color:
+#            rgba: 1, 0, 0, 1
+#        Line:
+#            width: 2
+#            rectangle: self.x, self.y, self.width, self.height
+    CircularButton:
+        id: step_1
+    AnimatedProgressBar:
+        id: step_2
+    CircularButton:
+        id: step_3
+    AnimatedProgressBar:
+        id: step_4
+    CircularButton:
+        id: step_5
+
 
 <NewEntityWindow>:
     name: "new_entity"
@@ -49,20 +81,8 @@ ScreenManager:
                 text: "Create new entity"
                 halign: 'center'
                 pos_hint:{'center_y': (5/root.widget_count)-0.1}
-
-            MDBoxLayout:
-                size_hint: .7, .15
-                pos_hint:{'center_y': (4.5/root.widget_count)-0.1, 'center_x': 0.5}
-                pos: (4.5/root.widget_count)-0.1, 1
-                canvas.before:
-                    Color:
-                        rgba: 1, 0, 0, 1
-                    Line:
-                        width: 2
-                        rectangle: self.x, self.y, self.width, self.height
-                CircularButton:
-                    pos_hint:{'center_y': (4.5/root.widget_count)-0.1}
-
+            ProgressComponent:
+                step: 1
             CommonTextField:
                 # id: text_field_error
                 hint_text: "Name of your organization"
@@ -97,6 +117,8 @@ ScreenManager:
                 text: "Add areas to entity"
                 halign: 'center'
                 pos_hint:{'center_y': (4/root.widget_count)-0.1}
+            ProgressComponent:
+                step: 2
             CommonTextField:
                 # id: text_field_error
                 hint_text: "Name of the area"
@@ -120,7 +142,6 @@ ScreenManager:
                     root.manager.transition.direction = "left"
 
 
-
 <AddWhatsappWindow>:
     name: "add_whatsapp"
     widget_count : 4
@@ -130,6 +151,8 @@ ScreenManager:
                 text: "Add Whatsapp number"
                 halign: 'center'
                 pos_hint:{'center_y': (4/root.widget_count)-0.1}
+            ProgressComponent:
+                step: 3
             CommonTextField:
                 # id: text_field_error
                 hint_text: "Name of the area"
@@ -162,6 +185,8 @@ ScreenManager:
                 text: "Validate Whatsapp number"
                 halign: 'center'
                 pos_hint:{'center_y': (4/root.widget_count)-0.1}
+            ProgressComponent:
+                step: 4
             # TODO agregar texto Scan the code from your organization's phone with the Whatsapp App
             MDIconButton:
                 icon: "refresh-circle"
@@ -181,7 +206,6 @@ ScreenManager:
                     root.manager.transition.direction = "left"
 
 
-
 <ShareCodeWindow>:
     name: "share_code"
     widget_count : 4
@@ -191,6 +215,8 @@ ScreenManager:
                 text: "Share your codes of subscriptions"
                 halign: 'center'
                 pos_hint:{'center_y': (4/root.widget_count)-0.1}
+            ProgressComponent:
+                step: 5
             # TODO agregar texto Scan the code from your organization's phone with the Whatsapp App
             MDIconButton:
                 icon: "refresh-circle"
