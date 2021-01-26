@@ -26,13 +26,26 @@ ScreenManager:
     required: True
     max_text_length: 32
     helper_text: "This field is required"
+    line_color_normal: primary_color
 
 
 <LabelButton@ButtonBehavior+MDLabel>:
-
-
-<AnimatedProgressBar>:
     color: primary_color
+    halign: 'center'
+
+<PurpleCenteredLabel@MDLabel>
+    color: primary_color
+    halign: 'center'
+
+<PurpleButton@MDRaisedButton>
+    md_bg_color: primary_color
+    text_color: 1, 1, 1, 1
+
+<AnimatedProgressBar@MDProgressBar>:
+    color: primary_color
+    type: "indeterminate"
+    running_duration: 1
+    catching_duration: 1.5
 
 
 <CircularButton>:
@@ -46,7 +59,6 @@ ScreenManager:
     pos_hint:{'center_y': (1)-0.14}
     size_hint_x: None
     width: 19.5
-
 
 <ProgressComponent>:
     size_hint: .7, .15
@@ -77,31 +89,27 @@ ScreenManager:
     widget_count : 5
     BaseLayout:
         MDFloatLayout:
-            MDLabel:
+            PurpleCenteredLabel:
                 text: "Create new entity"
-                halign: 'center'
                 pos_hint:{'center_y': (5/root.widget_count)-0.1}
             ProgressComponent:
                 step: 1
             CommonTextField:
-                # id: text_field_error
                 hint_text: "Name of your organization"
                 helper_text_mode: "on_error"
                 pos_hint:{'center_x': 0.5, 'center_y': (4/root.widget_count)-0.1}
             CommonTextField:
-                # id: text_field_error
                 icon_right: "at"
                 hint_text: "Id name of the entity"
                 helper_text_mode: "on_error"
                 pos_hint:{'center_x': 0.5, 'center_y': (3/root.widget_count)-0.1}
-            MDLabel:
+            LabelButton:
                 text: "More options"
-                halign: 'center'
-                pos_hint:{'center_y': (1.5/root.widget_count)-0.1}
-            MDFlatButton:
+                pos_hint:{'center_y': (2/root.widget_count)-0.1}
+            PurpleButton:
                 text: "Create entity"
-                pos_hint:{'center_x': 0.5, 'center_y': (2/root.widget_count)-0.1}
-                md_bg_color: 94/255, 53/255, 177/255, 1
+                pos_hint:{'center_x': 0.5, 'center_y': (1/root.widget_count)-0.1}
+                md_bg_color: primary_color
                 text_color: 1, 1, 1, 1
                 on_release:
                     app.root.current = "add_area"
@@ -113,18 +121,16 @@ ScreenManager:
     widget_count : 4
     BaseLayout:
         MDFloatLayout:
-            MDLabel:
+            PurpleCenteredLabel:
                 text: "Add areas to entity"
-                halign: 'center'
                 pos_hint:{'center_y': (4/root.widget_count)-0.1}
             ProgressComponent:
                 step: 2
             CommonTextField:
-                # id: text_field_error
                 hint_text: "Name of the area"
                 helper_text_mode: "on_error"
                 pos_hint:{'center_x': 0.5, 'center_y': (3/root.widget_count)-0.1}
-            MDFlatButton:
+            PurpleButton:
                 text: "Add"
                 pos_hint:{'center_x': 0.5, 'center_y': (2/root.widget_count)-0.1}
                 md_bg_color: primary_color
@@ -135,7 +141,6 @@ ScreenManager:
             # TODO agregar SCROLLVIEW
             LabelButton:
                 text: "Done"
-                halign: 'center'
                 pos_hint:{'center_y': (1/root.widget_count)-0.1}
                 on_release:
                     app.root.current = "add_whatsapp"
@@ -147,21 +152,19 @@ ScreenManager:
     widget_count : 4
     BaseLayout:
         MDFloatLayout:
-            MDLabel:
+            PurpleCenteredLabel:
                 text: "Add Whatsapp number"
-                halign: 'center'
                 pos_hint:{'center_y': (4/root.widget_count)-0.1}
             ProgressComponent:
                 step: 3
             CommonTextField:
-                # id: text_field_error
                 hint_text: "Name of the area"
                 helper_text_mode: "on_error"
                 pos_hint:{'center_x': 0.5, 'center_y': (3/root.widget_count)-0.1}
-            MDFlatButton:
+            PurpleButton:
                 text: "Add"
                 pos_hint:{'center_x': 0.5, 'center_y': (2/root.widget_count)-0.1}
-                md_bg_color: 94/255, 53/255, 177/255, 1
+                md_bg_color: primary_color
                 text_color: 1, 1, 1, 1
                 on_release:
                     app.root.current = "add_whatsapp"
@@ -169,7 +172,6 @@ ScreenManager:
             # TODO agregar SCROLLVIEW
             LabelButton:
                 text: "Next"
-                halign: 'center'
                 pos_hint:{'center_y': (1/root.widget_count)-0.1}
                 on_release:
                     app.root.current = "validate_whatsapp"
@@ -178,28 +180,39 @@ ScreenManager:
 
 <ValidateWhatsappWindow>:
     name: "validate_whatsapp"
-    widget_count : 4
+    widget_count : 5
     BaseLayout:
         MDFloatLayout:
-            MDLabel:
+            PurpleCenteredLabel:
                 text: "Validate Whatsapp number"
-                halign: 'center'
-                pos_hint:{'center_y': (4/root.widget_count)-0.1}
+                pos_hint:{'center_y': (5/root.widget_count)-0.1}
             ProgressComponent:
                 step: 4
-            # TODO agregar texto Scan the code from your organization's phone with the Whatsapp App
+            PurpleCenteredLabel:
+                text: "Scan the code from your organization's phone with the Whatsapp App"
+                pos_hint:{'center_y': (4/root.widget_count)-0.1}
+            Image:
+                source: 'images/qrcode.png'
+                pos_hint:{'center_y': (3/root.widget_count)-0.1, 'center_x': .5}
+                size_hint: 0.4, 0.4
             MDIconButton:
+                canvas.before:
+                    PushMatrix
+                    Rotate:
+                        angle: 270
+                        origin: self.center
+                canvas.after:
+                    PopMatrix
                 icon: "refresh-circle"
                 user_font_size: "48sp"
                 pos_hint:{'center_x': 0.5, 'center_y': (2/root.widget_count)-0.1}
-                theme_text_color: 'Primary'  # 94/255, 53/255, 177/255, 1
+#                md_bg_color: primary_color  # 94/255, 53/255, 177/255, 1
 #                on_release:
 #                    app.root.current = "add_whatsapp"
 #                    root.manager.transition.direction = "left"
             # TODO agregar SCROLLVIEW
             LabelButton:
                 text: "Done"
-                halign: 'center'
                 pos_hint:{'center_y': (1/root.widget_count)-0.1}
                 on_release:
                     app.root.current = "share_code"
@@ -211,9 +224,8 @@ ScreenManager:
     widget_count : 4
     BaseLayout:
         MDFloatLayout:
-            MDLabel:
+            PurpleCenteredLabel:
                 text: "Share your codes of subscriptions"
-                halign: 'center'
                 pos_hint:{'center_y': (4/root.widget_count)-0.1}
             ProgressComponent:
                 step: 5
@@ -229,7 +241,6 @@ ScreenManager:
             # TODO agregar SCROLLVIEW
             LabelButton:
                 text: "Done"
-                halign: 'center'
                 pos_hint:{'center_y': (1/root.widget_count)-0.1}
                 on_release:
                     app.root.current = "new_entity"

@@ -7,4 +7,4 @@ kivy_deps.gstreamer
 kivy_deps.angle
 pygame
 kivy
-kivymd
+https://github.com/kivymd/KivyMD/archive/master.zip
