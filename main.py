@@ -1,19 +1,30 @@
-from kivy.animation import Animation
+import re
+
 from kivy.clock import Clock
+from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty
 from kivy.uix.label import Label
-from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.screenmanager import Screen
 from kivymd.app import MDApp
 from kivymd.uix.boxlayout import MDBoxLayout
-from kivymd.uix.button import MDIconButton
-from kivymd.uix.progressbar import MDProgressBar
-from kivymd.icon_definitions import md_icons
-from kivy.uix.image import Image, AsyncImage
+from kivymd.uix.textfield import MDTextField
 
 
 class CircularButton(Label):
     active = ObjectProperty(False)
+
+
+class NumericField(MDTextField):
+    pat = re.compile('[^0-9]')
+    limit = 13
+
+    def insert_text(self, substring, from_undo=False):
+        pat = self.pat
+        s = re.sub(pat, '', substring)
+        if len(self.text) < self.limit:
+            return super(NumericField, self).insert_text(s, from_undo=from_undo)
+        return
 
 
 class ProgressComponent(MDBoxLayout):
@@ -70,22 +81,15 @@ class ShareCodeWindow(Screen):
     pass
 
 
-window_manager = ScreenManager()
-window_manager.add_widget(NewEntityWindow(name='new_entity'))
-window_manager.add_widget(AddAreaWindow(name='add_area'))
-window_manager.add_widget(AddWhatsappWindow(name='add_whatsapp'))
-window_manager.add_widget(ValidateWhatsappWindow(name='validate_whatsapp'))
-window_manager.add_widget(ShareCodeWindow(name='share_code'))
-window_manager.current = "new_entity"
-
-
 class MainApp(MDApp):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
     def build(self):
         self.title = 'GuazuApp'
+        Window.size = (360, 640)
         screen = Builder.load_file('content.kv')
+        screen.current = "add_area"
         return screen
 
 
