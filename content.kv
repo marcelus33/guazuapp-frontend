@@ -14,12 +14,13 @@ ScreenManager:
 # BoxLayout con Toolbar que se usa de base en todas las pantallas
 <BaseLayout@MDBoxLayout>:
     orientation: 'vertical'
+    last_right_icon: self.last_right_icon if self.last_right_icon else "dots-vertical"
     MDToolbar:
         title: "GuazuApp"
         pos_hint:{'center_x': 0.5, 'top': 1}
         md_bg_color: primary_color
         left_action_items: [["menu", lambda x: app.callback1_()]]
-        right_action_items: [["information", lambda x: app.callback_2()], ["dots-vertical", lambda x: app.callback_3()]]
+        right_action_items: [["information", lambda x: app.callback_2()], [root.last_right_icon, lambda x: app.close_app()]]
 
 
 <CommonTextField@MDTextField>:
@@ -56,10 +57,12 @@ ScreenManager:
     text_color: primary_color
 
 <AnimatedProgressBar@MDProgressBar>:
-    color: primary_color
     type: "indeterminate"
     running_duration: 1
     catching_duration: 1.5
+    color: primary_color
+    size_hint: 1, 1
+    pos_hint:{'center_y': .5, 'center_x': 0.5}
 
 
 <CircularButton>:
@@ -70,12 +73,20 @@ ScreenManager:
             size: (20, 20)
             pos: (self.pos)
             radius: [400, ]
-    pos_hint:{'center_y': (1)-0.14}
+    pos_hint:{'center_y': .5}
     size_hint_x: None
-    width: 19.5
+
+
+<DotLayout@MDGridLayout>:
+    size_hint: None, None
+    width: 20
+    height: 20
+    pos_hint:{'center_y': 0.5}
+    cols: 1
+
 
 <ProgressComponent>:
-    size_hint: .8, .15
+    size_hint: .8, .07
     steps: 5
     step: 0
     pos_hint:{'center_y': (4.9/root.steps)-0.1, 'center_x': 0.5}
@@ -86,24 +97,31 @@ ScreenManager:
 #        Line:
 #            width: 2
 #            rectangle: self.x, self.y, self.width, self.height
-    CircularButton:
-        id: step_1
-    AnimatedProgressBar:
-        id: step_2
-    CircularButton:
-        id: step_3
-    AnimatedProgressBar:
-        id: step_4
-    CircularButton:
-        id: step_5
+    DotLayout:
+        CircularButton:
+            id: step_1
+            size_hint: 1, .5
+            valign: 'middle'
+            halign: 'center'
+    MDGridLayout:
+        rows: 1
+        AnimatedProgressBar:
+            id: step_2
+    DotLayout:
+        CircularButton:
+            id: step_3
+    MDGridLayout:
+        rows: 1
+        AnimatedProgressBar:
+            id: step_4
+    DotLayout:
+        CircularButton:
+            id: step_5
 
-<CardItem@MDGridLayout>: # Scrollview container widget / card
-    canvas.before:
-        Color:
-            rgba: 1, 1, 1, 1  # black
-        Line:
-            width: 3
-            rectangle: self.x, self.y, self.width, self.height
+<ButtonIcon@ButtonBehavior+MDIcon>:
+
+
+<CardItem@MDGridLayout>:
     rows: 1
     cols: 2
     size_hint: None, 1
@@ -114,12 +132,11 @@ ScreenManager:
     MDLabel:
         canvas.before:
             Color:
-                rgba: 245/255, 245/255, 245/255, 1  # black
+                rgba: 245/255, 245/255, 245/255, 1
             Rectangle:
                 pos: self.pos
                 size: self.size
         size_hint_x: None
-        post_hint: {'center_x': .5, 'center_y': .5}
         width: root.container_width*.67
         text: root.label_text
         halign: 'center'
@@ -127,7 +144,7 @@ ScreenManager:
     MDGridLayout:
         canvas.before:
             Color:
-                rgba: 1, 1, 1, 1  # black
+                rgba: 1, 1, 1, 1
             Rectangle:
                 pos: self.pos
                 size: self.size
@@ -135,14 +152,72 @@ ScreenManager:
         spacing: 0, 0
         size_hint_x: None
         width: root.container_width*.33
-        MDIconButton:
-            icon: 'pencil'
-            theme_text_color: 'Custom'
-            text_color: primary_color
-            padding: [10, 0, 0, 0]
-        MDIconButton:
-            icon: 'trash-can'
-            padding: [10, 0, 0, 0]
+        MDGridLayout:
+            size_hint_x: None
+            width: root.container_width*.33
+            cols: 1
+            ButtonIcon:
+                icon: 'pencil'
+                theme_text_color: 'Custom'
+                text_color: primary_color
+                halign: 'center'
+                valign: 'middle'
+        MDGridLayout:
+            size_hint_x: None
+            width: root.container_width*.33
+            rows: 1
+            ButtonIcon:
+                icon: 'trash-can'
+                halign: 'center'
+                valign: 'middle'
+
+
+<ShareCard@MDGridLayout>:
+    rows: 1
+    cols: 2
+    size_hint: None, 1
+    width: 190
+    container_width: self.width
+    item_name: self.item_name if self.item_name else 'item_name'
+    code: self.code if self.code else 'code'
+    # col 1
+    MDGridLayout:
+        canvas.before:
+            Color:
+                rgba: 245/255, 245/255, 245/255, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        rows: 2
+        spacing: 0, 0
+        size_hint_x: None
+        width: root.container_width*.67
+        MDGridLayout:
+            size_hint_x: None
+            width: root.container_width*.67
+            rows: 2
+            PurpleCenteredLabel:
+                size_hint_x: 1
+                width: root.container_width*.33
+                text: root.item_name
+            PurpleCenteredLabel:
+                size_hint_x: 1
+                width: root.container_width*.33
+                text: 'code: '+root.code
+    # col 2
+    ButtonIcon:
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        icon: 'share-variant'
+        # icon: 'email-send'
+        theme_text_color: 'Custom'
+        text_color: primary_color
+        halign: 'center'
+        valign: 'middle'
 
 
 <NewEntityWindow>:
@@ -203,7 +278,6 @@ ScreenManager:
                 CommonTextField:
                     hint_text: "Name of the area"
                     helper_text_mode: "on_error"
-#                    pos_hint:{'center_x': 0.5, 'center_y': (3.3/root.widget_count)-coef_y}
             PurpleButton:
                 text: "Add"
                 pos_hint:{'center_x': 0.5, 'center_y': (3/root.widget_count)-coef_y}
@@ -240,6 +314,7 @@ ScreenManager:
                         spacing: 10
                         size_hint: None, 1
                         CardItem:
+                            label_text: 'Custom text'
                         CardItem:
                         CardItem:
                         CardItem:
@@ -304,7 +379,6 @@ ScreenManager:
                 pos_hint:{'center_y': (5/root.widget_count)-coef_y}
             ProgressComponent:
                 step: 4
-#                pos_hint:{'center_x': .5, 'center_y': (5.8/root.widget_count)-coef_y}
             PurpleCenteredLabel:
                 size_hint: 0.8, 0.2
                 text: "Scan the code from your organization's phone with the Whatsapp app"
@@ -319,8 +393,7 @@ ScreenManager:
                 pos_hint:{'center_x': 0.5, 'center_y': (1.7/root.widget_count)-coef_y}
 #                on_release:
 #                    app.root.current = "add_whatsapp"
-#                    root.manager.transition.direction = "left"
-            # TODO agregar SCROLLVIEW
+#                    root.manager.transition.direction = "left".
             LabelButton:
                 text: "Done"
                 pos_hint:{'center_x': 0.5, 'center_y': (1/root.widget_count)-coef_y}
@@ -331,27 +404,87 @@ ScreenManager:
 
 <ShareCodeWindow>:
     name: "share_code"
-    widget_count : 4
+    widget_count : 6
     BaseLayout:
+        last_right_icon: 'close'
         MDFloatLayout:
             PurpleCenteredLabel:
                 text: "Share your codes of subscriptions"
-                pos_hint:{'center_y': (4/root.widget_count)-coef_y}
+                pos_hint:{'center_y': (6/root.widget_count)-coef_y}
             ProgressComponent:
                 step: 5
-            # TODO agregar texto Scan the code from your organization's phone with the Whatsapp App
-#            MDIconButton:
-#                icon: "refresh-circle"
-#                user_font_size: "48sp"
-#                pos_hint:{'center_x': 0.5, 'center_y': (2/root.widget_count)-coef_y}
-#                theme_text_color: 'Primary'  # 94/255, 53/255, 177/255, 1
-##                on_release:
-##                    app.root.current = "add_whatsapp"
-##                    root.manager.transition.direction = "left"
-#            # TODO agregar SCROLLVIEW
-#            LabelButton:
-#                text: "Done"
-#                pos_hint:{'center_x': 0.5, 'center_y': (1/root.widget_count)-coef_y}
-#                on_release:
-#                    app.root.current = "new_entity"
-#                    root.manager.transition.direction = "left"
+            #
+            PurpleCenteredLabel:
+                text: "My entities"
+                pos_hint:{'center_y': (4.6/root.widget_count)-coef_y, 'center_x': .5}
+                size_hint: .3, .05
+            MDFloatLayout:
+                canvas.before:
+                    Color:
+                        rgba: scroll_bg_color
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                size_hint: 1, .15
+                pos_hint:{'center_x': 0.5, 'center_y': (3.9/root.widget_count)-coef_y}
+                ScrollView:
+                    canvas.before:
+                        Color:
+                            rgba: scroll_bg_color
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                    id: scrollview
+                    size_hint: 1, .82
+                    pos_hint:{'center_y': .5}
+                    do_scroll_x: True
+                    do_scroll_y: False
+                    MDGridLayout:
+                        id: card_cointainer
+                        rows: 1
+                        spacing: 10
+                        size_hint: None, 1
+                        ShareCard:
+                            item_name: '@cyberlink'
+                            code: '321ea'
+                        ShareCard:
+                        ShareCard:
+                        ShareCard:
+            #
+            PurpleCenteredLabel:
+                text: "Areas of "
+                pos_hint:{'center_y': (3/root.widget_count)-coef_y, 'center_x': .5}
+                size_hint: .3, .05
+            MDFloatLayout:
+                canvas.before:
+                    Color:
+                        rgba: scroll_bg_color
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                size_hint: 1, .15
+                pos_hint:{'center_x': 0.5, 'center_y': (2.3/root.widget_count)-coef_y}
+                ScrollView:
+                    canvas.before:
+                        Color:
+                            rgba: scroll_bg_color
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                    id: scrollview
+                    size_hint: 1, .82
+                    pos_hint:{'center_y': .5}
+                    do_scroll_x: True
+                    do_scroll_y: False
+                    MDGridLayout:
+                        id: card_cointainer
+                        rows: 1
+                        spacing: 10
+                        size_hint: None, 1
+                        ShareCard:
+                            item_name: '#ventas'
+                            code: '324we'
+                        ShareCard:
+                        ShareCard:
+                        ShareCard:
+

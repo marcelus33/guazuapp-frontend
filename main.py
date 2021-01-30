@@ -89,8 +89,10 @@ class MainApp(MDApp):
         self.title = 'GuazuApp'
         Window.size = (360, 640)
         screen = Builder.load_file('content.kv')
-        screen.current = "add_area"
         return screen
+
+    def close_app(self):
+        self.get_running_app().stop()
 
 
 MainApp().run()
