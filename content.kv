@@ -162,6 +162,8 @@ ScreenManager:
                 text_color: primary_color
                 halign: 'center'
                 valign: 'middle'
+                on_release:
+                    app.edit_area(root.id)
         MDGridLayout:
             size_hint_x: None
             width: root.container_width*.33
@@ -170,6 +172,8 @@ ScreenManager:
                 icon: 'trash-can'
                 halign: 'center'
                 valign: 'middle'
+                on_release:
+                    app.delete_area(root.id)
 
 
 <ShareCard@MDGridLayout>:
@@ -213,7 +217,6 @@ ScreenManager:
                 pos: self.pos
                 size: self.size
         icon: 'share-variant'
-        # icon: 'email-send'
         theme_text_color: 'Custom'
         text_color: primary_color
         halign: 'center'
@@ -222,6 +225,8 @@ ScreenManager:
 
 <NewEntityWindow>:
     name: "new_entity"
+    entity_name: entity_name
+    id_name: id_name
     widget_count : 5
     BaseLayout:
         MDFloatLayout:
@@ -231,6 +236,7 @@ ScreenManager:
             ProgressComponent:
                 step: 1
             CommonTextField:
+                id: entity_name
                 size_hint: .9, 0.1
                 hint_text: "Name of your organization"
                 helper_text_mode: "on_error"
@@ -243,19 +249,24 @@ ScreenManager:
                 PurpleIconButton:
                     icon: 'at'
                 CommonTextField:
+                    id: id_name
                     hint_text: "Id name of the entity"
                     helper_text_mode: "on_error"
                     size_hint: 0.5, 0.1
             LabelButton:
                 text: "More options"
                 pos_hint:{'center_x': 0.5, 'center_y': (2/root.widget_count)-coef_y}
+#                on_release:
+#                    pass
+
             PurpleButton:
                 text: "Create entity"
                 pos_hint:{'center_x': 0.5, 'center_y': (1/root.widget_count)-coef_y}
                 md_bg_color: primary_color
                 text_color: 1, 1, 1, 1
                 on_release:
-                    app.root.current = "add_area"
+                    app.set_entity()
+#                    app.root.current = "add_area"
                     root.manager.transition.direction = "left"
 
 
@@ -276,7 +287,8 @@ ScreenManager:
                 PurpleIconButton:
                     icon: 'pound'
                 CommonTextField:
-                    hint_text: "Name of the area"
+                    id: area_name
+                    hint_text: "Area name"
                     helper_text_mode: "on_error"
             PurpleButton:
                 text: "Add"
@@ -284,8 +296,9 @@ ScreenManager:
                 md_bg_color: primary_color
                 text_color: 1, 1, 1, 1
                 on_release:
-                    app.root.current = "add_whatsapp"
-                    root.manager.transition.direction = "left"
+                    # app.root.current = "add_whatsapp"
+                    app.set_areas()
+                    # root.manager.transition.direction = "left"
 
             MDFloatLayout:
                 canvas.before:
@@ -294,7 +307,8 @@ ScreenManager:
                     Rectangle:
                         pos: self.pos
                         size: self.size
-                size_hint: 1, .2
+                id: area_container
+                size_hint: 0, .2
                 pos_hint:{'center_x': 0.5, 'center_y': (2/root.widget_count)-coef_y}
                 ScrollView:
                     canvas.before:
@@ -309,21 +323,21 @@ ScreenManager:
                     do_scroll_x: True
                     do_scroll_y: False
                     MDGridLayout:
-                        id: card_cointainer
+                        id: card_area_cointainer
                         rows: 1
                         spacing: 10
                         size_hint: None, 1
-                        CardItem:
-                            label_text: 'Custom text'
-                        CardItem:
-                        CardItem:
-                        CardItem:
+#                        CardItem:
+#                            label_text: 'Custom text'
+#                        CardItem:
+#                        CardItem:
+#                        CardItem:
 
             LabelButton:
                 text: "Done"
                 pos_hint:{'center_x': 0.5, 'center_y': (1/root.widget_count)-coef_y}
                 on_release:
-                    app.root.current = "add_whatsapp"
+                    app.validate_areas()
                     root.manager.transition.direction = "left"
 
 
@@ -440,7 +454,7 @@ ScreenManager:
                     do_scroll_x: True
                     do_scroll_y: False
                     MDGridLayout:
-                        id: card_cointainer
+                        id: share_card1_cointainer
                         rows: 1
                         spacing: 10
                         size_hint: None, 1
@@ -477,7 +491,7 @@ ScreenManager:
                     do_scroll_x: True
                     do_scroll_y: False
                     MDGridLayout:
-                        id: card_cointainer
+                        id: share_card2_cointainer
                         rows: 1
                         spacing: 10
                         size_hint: None, 1
