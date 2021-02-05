@@ -19,6 +19,38 @@ class CardItem(MDGridLayout):
     label_text = StringProperty(None)
 
 
+class ShareCard(MDGridLayout):
+    item_name = StringProperty(None)
+    code = StringProperty(None)
+
+    def show_entity_areas(self, touch, code):
+        if not self.collide_point(*touch.pos):
+            return
+        share_code_screen = self.parent.parent.parent.parent.parent.parent
+        areas_container = share_code_screen.ids.share_card2_container
+        entities = share_code_screen.entities
+        #
+        selected_entity = None
+        for entity in entities:
+            if entity.get('code') == code:
+                selected_entity = entity
+                break
+        if not selected_entity:
+            return
+        entity_name = selected_entity.get('entity_name')
+        share_code_screen.selected_entity = entity_name
+        share_code_screen.ids.areas_label.text = "Areas of {}".format(entity_name)
+        #
+        areas = selected_entity.get('areas')
+        areas_container.clear_widgets()
+        for area in areas:
+            area_name = area.get('endpoint')
+            area_code = area.get('code')
+            share_item = ShareCard(item_name=area_name, code=area_code)
+            areas_container.add_widget(share_item)
+        print('this was touched '+code)
+
+
 class CircularButton(Label):
     active = ObjectProperty(False)
 
@@ -86,7 +118,41 @@ class ValidateWhatsappWindow(Screen):
 
 
 class ShareCodeWindow(Screen):
-    pass
+    entities = [{'entity_name': '@cyberlink', 'code': 'enti1',
+                 'areas': [{'endpoint': '#ventas', 'code': 'yt43h'},
+                           {'endpoint': '#servicio', 'code': 'g56h'},
+                           {'endpoint': '#servicio3', 'code': '1333'}]
+                 }, {'entity_name': '@cyberlink2', 'code': 'enti2',
+                     'areas': [{'endpoint': '#ventas2', 'code': 'yt43h'},
+                               {'endpoint': '#servicio2', 'code': 'g56h'},
+                               {'endpoint': '#servicio3', 'code': '2333'}]
+                     }]
+    selected_entity = ''
+
+    def on_enter(self, *args):
+        entities_container = self.ids.share_card1_container
+        areas_container = self.ids.share_card2_container
+        #
+        entities = self.entities
+        if not len(entities):
+            return
+        first_entity = self.entities[0]
+        entity_name = first_entity.get('entity_name')
+        self.ids.areas_label.text = "Areas of {}".format(entity_name)
+        #
+        areas = first_entity.get('areas')
+        for area in areas:
+            area_name = area.get('endpoint')
+            area_code = area.get('code')
+            share_item = ShareCard(item_name=area_name, code=area_code)
+            areas_container.add_widget(share_item)
+        #
+        for entity in entities:
+            entity_name = entity.get('entity_name')
+            self.ids.areas_label.text = "Areas of {}".format(entity_name)
+            entity_code = entity.get('code')
+            share_item = ShareCard(item_name=entity_name, code=entity_code)
+            entities_container.add_widget(share_item)
 
 
 def show_dialog(msg="Please fill all the required fields"):
@@ -165,6 +231,16 @@ class MainApp(MDApp):
             show_dialog(msg='Please add at least one Area')
             return
         self.root.current = "add_whatsapp"
+
+    def validate_phone(self):
+        add_whatsapp_screen = self.root.screens[2]
+        country_code = add_whatsapp_screen.ids.country_code.text
+        whatsapp_number = add_whatsapp_screen.ids.whatsapp_number.text
+        if country_code and whatsapp_number:
+            # TODO
+            self.root.current = "validate_whatsapp"
+            return
+        show_dialog()
 
     def close_app(self):
         self.get_running_app().stop()

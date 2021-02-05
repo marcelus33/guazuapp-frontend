@@ -90,13 +90,6 @@ ScreenManager:
     steps: 5
     step: 0
     pos_hint:{'center_y': (4.9/root.steps)-0.1, 'center_x': 0.5}
-    # 'debug' border
-#    canvas.before:
-#        Color:
-#            rgba: 1, 0, 0, 1
-#        Line:
-#            width: 2
-#            rectangle: self.x, self.y, self.width, self.height
     DotLayout:
         CircularButton:
             id: step_1
@@ -192,10 +185,13 @@ ScreenManager:
             Rectangle:
                 pos: self.pos
                 size: self.size
+        id: 'layout_'+root.code
         rows: 2
         spacing: 0, 0
         size_hint_x: None
         width: root.container_width*.67
+        on_touch_down:
+            root.show_entity_areas(args[1], root.code)
         MDGridLayout:
             size_hint_x: None
             width: root.container_width*.67
@@ -256,9 +252,6 @@ ScreenManager:
             LabelButton:
                 text: "More options"
                 pos_hint:{'center_x': 0.5, 'center_y': (2/root.widget_count)-coef_y}
-#                on_release:
-#                    pass
-
             PurpleButton:
                 text: "Create entity"
                 pos_hint:{'center_x': 0.5, 'center_y': (1/root.widget_count)-coef_y}
@@ -266,7 +259,6 @@ ScreenManager:
                 text_color: 1, 1, 1, 1
                 on_release:
                     app.set_entity()
-#                    app.root.current = "add_area"
                     root.manager.transition.direction = "left"
 
 
@@ -296,9 +288,7 @@ ScreenManager:
                 md_bg_color: primary_color
                 text_color: 1, 1, 1, 1
                 on_release:
-                    # app.root.current = "add_whatsapp"
                     app.set_areas()
-                    # root.manager.transition.direction = "left"
 
             MDFloatLayout:
                 canvas.before:
@@ -327,12 +317,6 @@ ScreenManager:
                         rows: 1
                         spacing: 10
                         size_hint: None, 1
-#                        CardItem:
-#                            label_text: 'Custom text'
-#                        CardItem:
-#                        CardItem:
-#                        CardItem:
-
             LabelButton:
                 text: "Done"
                 pos_hint:{'center_x': 0.5, 'center_y': (1/root.widget_count)-coef_y}
@@ -357,29 +341,22 @@ ScreenManager:
                 size_hint: .9, 0.1
                 pos_hint:{'center_x': 0.5, 'center_y': (3/root.widget_count)-coef_y}
                 NumericField:
+                    id: country_code
                     hint_text: "Country code"
                     helper_text_mode: "on_error"
                     size_hint_x: None
                     width: 100
                     limit: 3
                 NumericField:
+                    id: whatsapp_number
                     hint_text: "Whatsapp Number"
                     helper_text_mode: "on_error"
                     limit: 13
-            PurpleButton:
-                text: "Add"
-                pos_hint:{'center_x': 0.5, 'center_y': (2/root.widget_count)-coef_y}
-                md_bg_color: primary_color
-                text_color: 1, 1, 1, 1
-                on_release:
-                    app.root.current = "add_whatsapp"
-                    root.manager.transition.direction = "left"
-            # TODO agregar SCROLLVIEW
             LabelButton:
                 text: "Next"
                 pos_hint:{'center_x': 0.5, 'center_y': (1/root.widget_count)-coef_y}
                 on_release:
-                    app.root.current = "validate_whatsapp"
+                    app.validate_phone()
                     root.manager.transition.direction = "left"
 
 
@@ -405,9 +382,6 @@ ScreenManager:
                 icon: "refresh-circle"
                 user_font_size: "48sp"
                 pos_hint:{'center_x': 0.5, 'center_y': (1.7/root.widget_count)-coef_y}
-#                on_release:
-#                    app.root.current = "add_whatsapp"
-#                    root.manager.transition.direction = "left".
             LabelButton:
                 text: "Done"
                 pos_hint:{'center_x': 0.5, 'center_y': (1/root.widget_count)-coef_y}
@@ -454,18 +428,13 @@ ScreenManager:
                     do_scroll_x: True
                     do_scroll_y: False
                     MDGridLayout:
-                        id: share_card1_cointainer
+                        id: share_card1_container
                         rows: 1
                         spacing: 10
                         size_hint: None, 1
-                        ShareCard:
-                            item_name: '@cyberlink'
-                            code: '321ea'
-                        ShareCard:
-                        ShareCard:
-                        ShareCard:
             #
             PurpleCenteredLabel:
+                id: areas_label
                 text: "Areas of "
                 pos_hint:{'center_y': (3/root.widget_count)-coef_y, 'center_x': .5}
                 size_hint: .3, .05
@@ -491,14 +460,9 @@ ScreenManager:
                     do_scroll_x: True
                     do_scroll_y: False
                     MDGridLayout:
-                        id: share_card2_cointainer
+                        id: share_card2_container
                         rows: 1
                         spacing: 10
                         size_hint: None, 1
-                        ShareCard:
-                            item_name: '#ventas'
-                            code: '324we'
-                        ShareCard:
-                        ShareCard:
-                        ShareCard:
+
 
