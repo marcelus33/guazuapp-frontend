@@ -55,6 +55,10 @@ class CircularButton(Label):
     active = ObjectProperty(False)
 
 
+class CommonTextField(MDTextField):
+    pass
+
+
 class NumericField(MDTextField):
     pat = re.compile('[^0-9]')
     limit = 13
@@ -64,6 +68,56 @@ class NumericField(MDTextField):
         s = re.sub(pat, '', substring)
         if len(self.text) < self.limit:
             return super(NumericField, self).insert_text(s, from_undo=from_undo)
+        return
+
+
+class ReplicableTextField(CommonTextField):
+    """
+    Textfield Class that can copy its text to another TextField while typing with a filter
+    """
+    pat = re.compile('[^0-9A-Za-z& ]')
+    pat2 = re.compile('[^0-9A-Za-z ]')
+    limit = 25
+    copy_to = ObjectProperty(None)
+
+    def on_text(self, instance, text):
+        text = re.sub(self.pat2, '', text)
+        new_value = ""
+        for i, t in enumerate(text, start=0):
+            t = t.lower()
+            if text[i-1] == " " and t == " " and i > 1:
+                t = ""
+            if t == " ":
+                t = "-"
+            new_value = new_value + t
+        self.copy_to.text = new_value
+
+    def insert_text(self, substring, from_undo=False):
+        pat = self.pat
+        s = re.sub(pat, '', substring)
+        if len(self.text) < self.limit:
+            if self.text == '' and s == ' ':
+                return
+            if len(self.text) > 2 and self.text[-1] == " " and s == " ":
+                return
+            return super(ReplicableTextField, self).insert_text(s, from_undo=from_undo)
+        return
+
+
+class OnlyAlphaNumericTextField(CommonTextField):
+    pat = re.compile('[^0-9A-Za-z ]')
+    limit = 25
+    only_lowercase = True
+
+    def insert_text(self, substring, from_undo=False):
+        pat = self.pat
+        s = re.sub(pat, '', substring)
+        if self.only_lowercase:
+            s = s.lower()
+        if len(self.text) < self.limit:
+            if s == " ":
+                s = "-"
+            return super(OnlyAlphaNumericTextField, self).insert_text(s, from_undo=from_undo)
         return
 
 
@@ -177,8 +231,9 @@ class MainApp(MDApp):
 
     def build(self):
         self.title = 'GuazuApp'
-        Window.size = (360, 640)
+        Window.size = (360, 640)  # more common dimensions for mobiles, delete this for building
         screen = Builder.load_file('content.kv')
+        # screen.current = "new_entity"
         return screen
 
     def set_entity(self):
@@ -237,7 +292,6 @@ class MainApp(MDApp):
         country_code = add_whatsapp_screen.ids.country_code.text
         whatsapp_number = add_whatsapp_screen.ids.whatsapp_number.text
         if country_code and whatsapp_number:
-            # TODO
             self.root.current = "validate_whatsapp"
             return
         show_dialog()
