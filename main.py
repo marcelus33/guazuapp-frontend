@@ -1,6 +1,7 @@
 import re
 import uuid
 
+from kivy import platform
 from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.lang import Builder
@@ -8,9 +9,11 @@ from kivy.properties import ObjectProperty, StringProperty
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen
 from kivymd.app import MDApp
+from kivymd.toast import toast
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.dialog import MDDialog
+from kivymd.uix.filemanager import MDFileManager
 from kivymd.uix.gridlayout import MDGridLayout
 from kivymd.uix.textfield import MDTextField
 
@@ -228,6 +231,12 @@ class MainApp(MDApp):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.manager_open = False
+        self.file_manager = MDFileManager(
+            exit_manager=self.exit_manager,
+            select_path=self.select_path,
+            preview=True,
+        )
 
     def build(self):
         self.title = 'GuazuApp'
@@ -295,6 +304,64 @@ class MainApp(MDApp):
             self.root.current = "validate_whatsapp"
             return
         show_dialog()
+
+    def show_more_options(self):
+        new_entity_screen = self.root.screens[0]
+        more_options_button = new_entity_screen.ids.more_options_button
+        more_options_container = new_entity_screen.ids.more_options_container
+        publish_button = new_entity_screen.ids.publish_button
+        create_entity_button = new_entity_screen.ids.create_entity_button
+        #
+        more_options_container.size_hint_y = 1
+        more_options_container.opacity = 1
+        more_options_button.size_hint_y = 0
+        more_options_button.text = ""
+        publish_button.disabled = False
+        create_entity_button.pos_hint = {'center_x': 0.5, 'y': -0.2}
+
+    # #### FileManager #### #
+    def upload_image(self, touch, image):
+        """
+        Be careful! To use the / path on Android devices, you need special permissions.
+        Therefore, you are likely to get an error.
+        """
+        if not image.collide_point(*touch.pos):
+            return
+        path = ""
+        operative_system = platform
+        if operative_system == "win":
+            path = 'C:/Users/PC/Downloads/'
+        if operative_system == "linux":
+            path = '/'
+        if operative_system == "android":
+            path = '/'
+        self.file_manager.show(path)  # output manager to the screen
+        self.manager_open = True
+
+    def select_path(self, path):
+        """It will be called when you click on the file name
+        or the catalog selection button.
+
+        :type path: str;
+        :param path: path to the selected directory or file;
+        """
+
+        self.exit_manager()
+        toast(path)
+
+    def exit_manager(self, *args):
+        """Called when the user reaches the root of the directory tree."""
+
+        self.manager_open = False
+        self.file_manager.close()
+
+    def events(self, instance, keyboard, keycode, text, modifiers):
+        """Called when buttons are pressed on the mobile device."""
+
+        if keyboard in (1001, 27):
+            if self.manager_open:
+                self.file_manager.back()
+        return True
 
     def close_app(self):
         self.get_running_app().stop()
