@@ -1,0 +1,34 @@
+<AddWhatsappWindow>:
+    name: "add_whatsapp"
+    widget_count : 4
+    BaseLayout:
+        MDFloatLayout:
+            PurpleCenteredLabel:
+                text: "Add Whatsapp number"
+                pos_hint:{'center_y': (4/root.widget_count)-coef_y}
+            ProgressComponent:
+                step: 3
+            MDGridLayout:
+                cols: 2
+                padding: 19.5, 0
+                spacing: 15, 0
+                size_hint: 1, 0.1
+                pos_hint:{'center_x': 0.5, 'center_y': (3/root.widget_count)-coef_y}
+                NumericField:
+                    id: country_code
+                    hint_text: "Country code"
+                    helper_text_mode: "on_error"
+                    size_hint_x: None
+                    width: 100
+                    limit: 3
+                NumericField:
+                    id: whatsapp_number
+                    hint_text: "Whatsapp Number"
+                    helper_text_mode: "on_error"
+                    limit: 13
+            LabelButton:
+                text: "Next"
+                pos_hint:{'center_x': 0.5, 'center_y': (1/root.widget_count)-coef_y}
+                on_release:
+                    app.validate_phone()
+                    root.manager.transition.direction = "left"

@@ -46,12 +46,12 @@ class ShareCard(MDGridLayout):
         #
         areas = selected_entity.get('areas')
         areas_container.clear_widgets()
+        areas_container.bind(minimum_width=areas_container.setter('width'))
         for area in areas:
             area_name = area.get('endpoint')
             area_code = area.get('code')
             share_item = ShareCard(item_name=area_name, code=area_code)
             areas_container.add_widget(share_item)
-        print('this was touched '+code)
 
 
 class CircularButton(Label):
@@ -159,7 +159,14 @@ class ProgressComponent(MDBoxLayout):
 
 
 class NewEntityWindow(Screen):
-    pass
+    # pass
+    def on_enter(self, *args):
+        Clock.schedule_once(self.set_layout_bind)
+
+    def set_layout_bind(self, dt):
+        scroll_layout = self.ids.get("new_entity_scroll_layout")
+        if scroll_layout:
+            scroll_layout.bind(minimum_height=scroll_layout.setter('height'))
 
 
 class AddAreaWindow(Screen):
@@ -189,6 +196,8 @@ class ShareCodeWindow(Screen):
     def on_enter(self, *args):
         entities_container = self.ids.share_card1_container
         areas_container = self.ids.share_card2_container
+        entities_container.bind(minimum_width=entities_container.setter('width'))
+        areas_container.bind(minimum_width=areas_container.setter('width'))
         #
         entities = self.entities
         if not len(entities):
@@ -225,6 +234,16 @@ def show_dialog(msg="Please fill all the required fields"):
     dialog.open()
 
 
+# Loading all the kv files
+Builder.load_file('screens/styles.kv')
+Builder.load_file('screens/components.kv')
+Builder.load_file('screens/new_entity.kv')
+Builder.load_file('screens/add_area.kv')
+Builder.load_file('screens/add_whatsapp.kv')
+Builder.load_file('screens/validate_whatsapp.kv')
+Builder.load_file('screens/share_code.kv')
+
+
 class MainApp(MDApp):
     entity = {}
     areas = []
@@ -242,7 +261,7 @@ class MainApp(MDApp):
         self.title = 'GuazuApp'
         Window.size = (360, 640)  # more common dimensions for mobiles, delete this for building
         screen = Builder.load_file('content.kv')
-        # screen.current = "new_entity"
+        # screen.current = "add_area"
         return screen
 
     def set_entity(self):
@@ -258,13 +277,16 @@ class MainApp(MDApp):
     def set_areas(self):
         add_area_screen = self.root.screens[1]
         area_name = add_area_screen.ids.area_name.text
+        area_container_layout = add_area_screen.ids.area_container_layout
         area_container = add_area_screen.ids.area_container
         card_cointainer = add_area_screen.ids.card_area_cointainer
+        card_cointainer.bind(minimum_width=card_cointainer.setter('width'))
 
         if area_name:
             self.areas.append(area_name)
             add_area_screen.ids.area_name.text = ''
-            area_container.size_hint = [1, .2]
+            area_container_layout.size_hint = [1, .2]
+            area_container.size_hint_y = .9
             area_item = CardItem(label_text=area_name)
             area_item.id = uuid.uuid1()
             card_cointainer.add_widget(area_item)
@@ -308,16 +330,24 @@ class MainApp(MDApp):
     def show_more_options(self):
         new_entity_screen = self.root.screens[0]
         more_options_button = new_entity_screen.ids.more_options_button
+        #
         more_options_container = new_entity_screen.ids.more_options_container
         publish_button = new_entity_screen.ids.publish_button
+        create_group_button = new_entity_screen.ids.create_group_button
+        add_areas_button = new_entity_screen.ids.add_areas_button
+        #
         create_entity_button = new_entity_screen.ids.create_entity_button
+        # new_entity_float_layout = new_entity_screen.ids.new_entity_float_layout
         #
         more_options_container.size_hint_y = 1
         more_options_container.opacity = 1
         more_options_button.size_hint_y = 0
         more_options_button.text = ""
         publish_button.disabled = False
-        create_entity_button.pos_hint = {'center_x': 0.5, 'y': -0.2}
+        create_group_button.disabled = False
+        add_areas_button.disabled = False
+        # new_entity_float_layout.height += 400
+        create_entity_button.pos_hint = {'center_x': 0.5, 'center_y': .23}
 
     # #### FileManager #### #
     def upload_image(self, touch, image):
@@ -345,8 +375,11 @@ class MainApp(MDApp):
         :type path: str;
         :param path: path to the selected directory or file;
         """
-
+        new_entity_screen = self.root.screens[0]
+        image_thumbnail = new_entity_screen.ids.image_thumbnail
+        image_thumbnail.source = path
         self.exit_manager()
+        self.manager_open = False
         toast(path)
 
     def exit_manager(self, *args):

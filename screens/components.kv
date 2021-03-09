@@ -1,0 +1,254 @@
+# BoxLayout con Toolbar que se usa de base en todas las pantallas
+<BaseLayout@MDBoxLayout>:
+    orientation: 'vertical'
+    last_right_icon: self.last_right_icon if self.last_right_icon else "dots-vertical"
+    custom_fn: self.custom_fn if self.custom_fn else None
+    MDGridLayout:
+        canvas.before:
+            Color:
+                rgba: primary_color
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        size_hint: 1, .1
+        cols: 4
+        MDFloatLayout:
+            size_hint_x: None
+            width: 70
+            MDIconButton:
+                theme_text_color: 'Custom'
+                text_color: 1, 1, 1, 1
+                icon: 'menu'
+                pos_hint: {'center_y': .5, 'center_x': .4}
+        MDFloatLayout:
+            MDLabel:
+                text: 'GuazuApp'
+                markup: True
+                shorten: True
+                font_size: '19sp'
+                color: 1, 1, 1, 1
+                pos_hint: {'center_y': .5, 'center_x': .5}
+        MDFloatLayout:
+            size_hint_x: None
+            width: 40
+            MDIconButton:
+                theme_text_color: 'Custom'
+                text_color: 1, 1, 1, 1
+                icon: 'information'
+                pos_hint: {'center_y': .5, 'center_x': .5}
+        MDFloatLayout:
+            size_hint_x: None
+            width: 40
+            MDIconButton:
+                theme_text_color: 'Custom'
+                text_color: 1, 1, 1, 1
+                icon: root.last_right_icon
+                custom_fn: root.custom_fn
+                pos_hint: {'center_y': .5, 'center_x': .5}
+                on_release:
+                    app.close_app() if self.icon == 'close' else self.custom_fn
+
+
+<CommonTextField@MDTextField>:
+    size_hint: 0.75, 0.1
+    size_hint_max_y: 65
+    multiline: False
+    required: True
+    max_text_length: 32
+    helper_text: "This field is required"
+    line_color_normal: primary_color
+    color_mode: 'custom'
+    line_color_focus: primary_color
+
+
+<OnlyAlphaNumericTextField@CommonTextField>:
+<ReplicableTextField@CommonTextField>:
+
+
+<NumericField@CommonTextField>:
+    size_hint: 0.75, 0.1
+    input_filter: 'int'
+    color_mode: 'custom'
+    line_color_focus: primary_color
+
+
+<LabelButton@MDTextButton>:
+    color: primary_color
+
+<PurpleCenteredLabel@MDLabel>
+    color: primary_color
+    halign: 'center'
+
+<PurpleButton@MDRaisedButton>
+    md_bg_color: primary_color
+    text_color: 1, 1, 1, 1
+
+<PurpleIconButton@MDIconButton>
+    theme_text_color: 'Custom'
+    text_color: primary_color
+    user_font_size: "18sp"
+
+<AnimatedProgressBar@MDProgressBar>:
+    type: "indeterminate"
+    running_duration: 1
+    catching_duration: 1.5
+    color: primary_color
+    size_hint: 1, 1
+    pos_hint:{'center_y': .5, 'center_x': 0.5}
+
+
+<CircularButton>:
+    canvas:
+        Color:
+            rgb: primary_color if self.active else inactive_color
+        RoundedRectangle:
+            size: (20, 20)
+            pos: (self.pos)
+            radius: [400, ]
+    pos_hint:{'center_y': .5}
+    size_hint_x: None
+
+<PaddingLayout@MDGridLayout>:
+    rows: 1
+    padding: 19.5, 0
+
+
+<DotLayout@MDGridLayout>:
+    size_hint: None, None
+    width: 20
+    height: 20
+    pos_hint:{'center_y': 0.5}
+    cols: 2
+
+
+<ProgressComponent>:
+    size_hint: 1, .07
+    steps: 5
+    step: 0
+    padding: 19.5, 0
+    pos_hint:{'center_y': (4.9/root.steps)-0.1, 'center_x': 0.5}
+    DotLayout:
+        CircularButton:
+            id: step_1
+    MDGridLayout:
+        rows: 1
+        AnimatedProgressBar:
+            id: step_2
+    DotLayout:
+        CircularButton:
+            id: step_3
+    MDGridLayout:
+        rows: 1
+        AnimatedProgressBar:
+            id: step_4
+    DotLayout:
+        CircularButton:
+            id: step_5
+
+
+<ButtonIcon@ButtonBehavior+MDIcon>:
+
+
+<CardItem@MDGridLayout>:
+    rows: 1
+    cols: 2
+    size_hint: None, 1
+    width: 150
+    container_width: self.width
+    label_text: self.label_text if self.label_text else '@entity #service'
+    # col 1
+    MDLabel:
+        canvas.before:
+            Color:
+                rgba: 245/255, 245/255, 245/255, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        size_hint_x: None
+        width: root.container_width*.67
+        text: root.label_text
+        halign: 'center'
+    # col 2
+    MDGridLayout:
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        rows: 2
+        spacing: 0, 0
+        size_hint_x: None
+        width: root.container_width*.33
+        MDGridLayout:
+            size_hint_x: None
+            width: root.container_width*.33
+            cols: 1
+            ButtonIcon:
+                icon: 'pencil'
+                theme_text_color: 'Custom'
+                text_color: primary_color
+                halign: 'center'
+                valign: 'middle'
+                on_release:
+                    app.edit_area(root.id)
+        MDGridLayout:
+            size_hint_x: None
+            width: root.container_width*.33
+            rows: 1
+            ButtonIcon:
+                icon: 'trash-can'
+                halign: 'center'
+                valign: 'middle'
+                on_release:
+                    app.delete_area(root.id)
+
+
+<ShareCard@MDGridLayout>:
+    rows: 1
+    cols: 2
+    size_hint: None, 1
+    width: 190
+    container_width: self.width
+    item_name: self.item_name if self.item_name else 'item_name'
+    code: self.code if self.code else 'code'
+    # col 1
+    MDGridLayout:
+        canvas.before:
+            Color:
+                rgba: 245/255, 245/255, 245/255, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        id: 'layout_'+root.code
+        rows: 2
+        spacing: 0, 0
+        size_hint_x: None
+        width: root.container_width*.67
+        on_touch_down:
+            root.show_entity_areas(args[1], root.code)
+        MDGridLayout:
+            size_hint_x: None
+            width: root.container_width*.67
+            rows: 2
+            PurpleCenteredLabel:
+                size_hint_x: 1
+                width: root.container_width*.33
+                text: root.item_name
+            PurpleCenteredLabel:
+                size_hint_x: 1
+                width: root.container_width*.33
+                text: 'code: '+root.code
+    # col 2
+    ButtonIcon:
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        icon: 'share-variant'
+        theme_text_color: 'Custom'
+        text_color: primary_color
+        halign: 'center'
+        valign: 'middle'
