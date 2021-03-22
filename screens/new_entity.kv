@@ -4,6 +4,7 @@
     id_name: id_name
     widget_count : 5
     BaseLayout:
+        title: "Entidades"
         MDFloatLayout:
             PurpleCenteredLabel:
                 text: "Crear nueva entidad"
@@ -22,7 +23,7 @@
                 do_scroll_x: False
                 do_scroll_y: True
                 size_hint: 1, None
-                height: root.height-(root.height*.15)
+                height: root.height-(root.height*.10)
                 pos_hint:{'center_x': 0.5, 'center_y': .3}
                 MDGridLayout:
 #                    canvas.before:
@@ -33,6 +34,7 @@
 #                            rectangle: self.x, self.y, self.width, self.height
                     id: new_entity_scroll_layout
                     size_hint: 1, None
+                    height: 1000 ##
                     cols: 1
                     ##
                     MDFloatLayout:
@@ -66,7 +68,14 @@
                                 cols: 2
                                 size_hint_x: 1
                                 PurpleIconButton:
+#                                    canvas.before:
+#                                        Color:
+#                                            rgba: 0, 0, 1, 1
+#                                        Line:
+#                                            width: 1
+#                                            rectangle: self.x, self.y, self.width, self.height
                                     icon: 'at'
+                                    padding: 0, 0, 0, 15
                                 OnlyAlphaNumericTextField:
                                     id: id_name
                                     hint_text: "id-nombre-de-la-organización"
@@ -77,7 +86,7 @@
 #                            pos_hint:{'center_x': 0.5, 'center_y': .6}
                             pos_hint:{'center_x': 0.5, 'center_y': .75}
                             on_release:
-                                app.show_more_options()
+                                app.show_more_options(root)
                         ##
                         MDGridLayout:
                             canvas.before:
@@ -142,15 +151,21 @@
                                     thumb_color: primary_color
                                     thumb_color_down: primary_color
 
-                            PaddingLayout:
+                            ScrollView:
+                                do_scroll_x: False
+                                do_scroll_y: True
                                 size_hint: 1, None
-                                height: 60
-#                                padding: 19.5, 0, 40, 0
-                                CommonTextField:
-                                    id: welcome_message
-                                    size_hint_x: 1
-                                    hint_text: "Mensaje de bienvenida"
-                                    helper_text_mode: "on_error"
+                                height: 85
+                                PaddingLayout:
+                                    size_hint: 1, None
+                                    height: 140
+    #                                padding: 19.5, 0, 40, 0
+                                    MultilineTextField:
+                                        id: welcome_message
+                                        size_hint_x: 1
+                                        size_hint_y: None
+                                        hint_text: "Mensaje de bienvenida"
+                                        helper_text_mode: "on_error"
 
                             PaddingLayout:
 #                                canvas.before:
@@ -204,10 +219,11 @@
                         PurpleButton:
                             id: create_entity_button
                             text: "Siguiente"
+                            pos_hint:{'center_x': 0.5, 'center_y': .7}
                             size_hint_x: .4
-                            pos_hint:{'center_x': 0.5, 'center_y': .7}#'y': -0.2}
                             md_bg_color: primary_color
                             text_color: 1, 1, 1, 1
                             on_release:
                                 app.set_entity()
                                 root.manager.transition.direction = "left"
+

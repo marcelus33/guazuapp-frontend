@@ -2,73 +2,113 @@
     name: "share_code"
     widget_count : 6
     BaseLayout:
+        title: "Suscripciones"
         last_right_icon: 'close'
         MDFloatLayout:
             PurpleCenteredLabel:
-                text: "Share your codes of subscriptions"
+                text: "Enviar invitación de subscripción"
                 pos_hint:{'center_y': (6/root.widget_count)-coef_y}
             ProgressComponent:
                 step: 5
             #
-            PurpleCenteredLabel:
-                text: "My entities"
+            PaddingLayout:
+                id: mis_entitades_label
+                size_hint: 1, .05
                 pos_hint:{'center_y': (4.6/root.widget_count)-coef_y, 'center_x': .5}
-                size_hint: .3, .05
-            MDFloatLayout:
-                canvas.before:
-                    Color:
-                        rgba: scroll_bg_color
-                    Rectangle:
-                        pos: self.pos
-                        size: self.size
+                MDGridLayout:
+                    canvas.before:
+                        Color:
+                            rgba: 245/255, 245/255, 245/255, 1
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                    rows: 1
+                    MDLabel:
+                        padding: 10, 0
+                        color: primary_color
+                        text: "Mis entidades"
+
+            PaddingLayout:
+                id: entidades_container_layout
                 size_hint: 1, .15
-                pos_hint:{'center_x': 0.5, 'center_y': (3.9/root.widget_count)-coef_y}
-                ScrollView:
+                pos_hint:{'center_x': 0.5, 'center_y': (4/root.widget_count)-coef_y}
+                MDFloatLayout:
                     canvas.before:
                         Color:
                             rgba: scroll_bg_color
                         Rectangle:
                             pos: self.pos
                             size: self.size
-                    id: scrollview
-                    size_hint: 1, .82
-                    pos_hint:{'center_y': .5}
-                    do_scroll_x: True
-                    do_scroll_y: False
-                    MDGridLayout:
-                        id: share_card1_container
-                        rows: 1
-                        spacing: 10
-                        size_hint: None, 1
+                    size_hint: 1, .15
+                    ScrollView:
+                        canvas.before:
+                            Color:
+                                rgba: scroll_bg_color
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+                        id: scrollview
+                        size_hint: 1, .82
+                        pos_hint:{'center_y': .5, 'x': 0}
+                        do_scroll_x: True
+                        do_scroll_y: False
+                        MDGridLayout:
+                            id: share_card1_container
+                            rows: 1
+                            spacing: 10
+                            size_hint: None, 1
+                            MDGridLayout:
+                                cols: 1
+                                size_hint_x: None
+                                width: 2
             #
-            PurpleCenteredLabel:
+            PaddingLayout:
                 id: areas_label
-                text: "Areas of "
-                pos_hint:{'center_y': (3/root.widget_count)-coef_y, 'center_x': .5}
-                size_hint: .3, .05
-            MDFloatLayout:
-                canvas.before:
-                    Color:
-                        rgba: scroll_bg_color
-                    Rectangle:
-                        pos: self.pos
-                        size: self.size
+                size_hint: 1, .05
+                pos_hint:{'center_y': (2.9/root.widget_count)-coef_y, 'center_x': .5}
+                MDGridLayout:
+                    canvas.before:
+                        Color:
+                            rgba: 245/255, 245/255, 245/255, 1
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                    rows: 1
+                    MDLabel:
+                        padding: 10, 0
+                        color: primary_color
+                        text: "Áreas en"
+
+            PaddingLayout:
+                id: area_container_layout
                 size_hint: 1, .15
                 pos_hint:{'center_x': 0.5, 'center_y': (2.3/root.widget_count)-coef_y}
-                ScrollView:
+                MDFloatLayout:
                     canvas.before:
                         Color:
                             rgba: scroll_bg_color
                         Rectangle:
                             pos: self.pos
                             size: self.size
-                    id: scrollview
-                    size_hint: 1, .82
-                    pos_hint:{'center_y': .5}
-                    do_scroll_x: True
-                    do_scroll_y: False
-                    MDGridLayout:
-                        id: share_card2_container
-                        rows: 1
-                        spacing: 10
-                        size_hint: None, 1
+                    size_hint: 1, 1
+                    ScrollView:
+                        canvas.before:
+                            Color:
+                                rgba: scroll_bg_color
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+                        id: scrollview
+                        size_hint: 1, .82
+                        pos_hint:{'center_y': .5, 'x': 0}
+                        do_scroll_x: True
+                        do_scroll_y: False
+                        MDGridLayout:
+                            id: share_card2_container
+                            rows: 1
+                            spacing: 10
+                            size_hint: None, 1
+                            MDGridLayout:
+                                cols: 1
+                                size_hint_x: None
+                                width: 2

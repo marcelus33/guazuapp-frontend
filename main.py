@@ -1,7 +1,6 @@
 import re
 import uuid
 
-from kivy import platform
 from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.lang import Builder
@@ -9,13 +8,25 @@ from kivy.properties import ObjectProperty, StringProperty
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen
 from kivymd.app import MDApp
-from kivymd.toast import toast
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.dialog import MDDialog
-from kivymd.uix.filemanager import MDFileManager
 from kivymd.uix.gridlayout import MDGridLayout
 from kivymd.uix.textfield import MDTextField
+
+from helpers import get_screen_by_name
+
+
+class Filechooser(MDGridLayout):
+    def select(self, *args):
+        try:
+            self.label.text = args[1][0]
+        except:
+            pass
+
+
+class ChannelLayout(MDGridLayout):
+    pass
 
 
 class CardItem(MDGridLayout):
@@ -158,8 +169,12 @@ class ProgressComponent(MDBoxLayout):
             self.ids.step_5.active = True
 
 
+class LoginWindow(Screen):
+    pass
+
+
 class NewEntityWindow(Screen):
-    # pass
+
     def on_enter(self, *args):
         Clock.schedule_once(self.set_layout_bind)
 
@@ -170,7 +185,14 @@ class NewEntityWindow(Screen):
 
 
 class AddAreaWindow(Screen):
-    pass
+
+    def on_enter(self, *args):
+        Clock.schedule_once(self.set_layout_bind)
+
+    def set_layout_bind(self, dt):
+        scroll_layout = self.ids.get("add_area_scroll_layout")
+        if scroll_layout:
+            scroll_layout.bind(minimum_height=scroll_layout.setter('height'))
 
 
 class AddWhatsappWindow(Screen):
@@ -221,7 +243,7 @@ class ShareCodeWindow(Screen):
             entities_container.add_widget(share_item)
 
 
-def show_dialog(msg="Please fill all the required fields"):
+def show_dialog(msg="Por favor complete todos los campos"):
     dialog = MDDialog(
         text=msg,
         buttons=[
@@ -237,6 +259,7 @@ def show_dialog(msg="Please fill all the required fields"):
 # Loading all the kv files
 Builder.load_file('screens/styles.kv')
 Builder.load_file('screens/components.kv')
+Builder.load_file('screens/login.kv')
 Builder.load_file('screens/new_entity.kv')
 Builder.load_file('screens/add_area.kv')
 Builder.load_file('screens/add_whatsapp.kv')
@@ -250,23 +273,29 @@ class MainApp(MDApp):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.manager_open = False
-        self.file_manager = MDFileManager(
-            exit_manager=self.exit_manager,
-            select_path=self.select_path,
-            preview=True,
-        )
 
     def build(self):
         self.title = 'GuazuApp'
         Window.size = (360, 640)  # more common dimensions for mobiles, delete this for building
         screen = Builder.load_file('content.kv')
-        # screen.current = "add_area"
+        screen.current = "add_whatsapp"
         return screen
 
+    def login(self):
+        # TODO verify credentials
+        self.root.current = "new_entity"
+
+    def enter_entity_screen(self):
+        self.root.current = "new_entity"
+
+    def enter_add_area_screen(self):
+        self.root.current = "add_area"
+
     def set_entity(self):
-        entity_name = self.root.screens[0].ids.entity_name.text
-        id_name = self.root.screens[0].ids.id_name.text
+        # new_entity_screen = self.root.screens[0]
+        new_entity_screen = get_screen_by_name(self.root.screens, "new_entity")
+        entity_name = new_entity_screen.ids.entity_name.text
+        id_name = new_entity_screen.ids.id_name.text
         if entity_name and id_name:
             self.entity['entity_name'] = entity_name
             self.entity['id_name'] = id_name
@@ -275,7 +304,7 @@ class MainApp(MDApp):
         show_dialog()
 
     def set_areas(self):
-        add_area_screen = self.root.screens[1]
+        add_area_screen = get_screen_by_name(self.root.screens, "add_area")  # self.root.screens[1]
         area_name = add_area_screen.ids.area_name.text
         area_container_layout = add_area_screen.ids.area_container_layout
         area_container = add_area_screen.ids.area_container
@@ -291,13 +320,13 @@ class MainApp(MDApp):
             area_item.id = uuid.uuid1()
             card_cointainer.add_widget(area_item)
             return
-        show_dialog(msg='Please insert a name')
+        show_dialog(msg='Por favor escriba un nombre')
 
     def edit_area(self, area_id):
         print('Edited area was #'+str(area_id))
 
     def delete_area(self, area_id):
-        add_area_screen = self.root.screens[1]
+        add_area_screen = get_screen_by_name(self.root.screens, "add_area")  # self.root.screens[1]
         area_container = add_area_screen.ids.area_container
         card_cointainer = add_area_screen.ids.card_area_cointainer
         area_name = None
@@ -314,12 +343,12 @@ class MainApp(MDApp):
     def validate_areas(self):
         areas = self.areas
         if len(areas) < 1:
-            show_dialog(msg='Please add at least one Area')
+            show_dialog(msg='Debe agregar al menos un área')
             return
         self.root.current = "add_whatsapp"
 
     def validate_phone(self):
-        add_whatsapp_screen = self.root.screens[2]
+        add_whatsapp_screen = get_screen_by_name(self.root.screens, "add_whatsapp")  # self.root.screens[2]
         country_code = add_whatsapp_screen.ids.country_code.text
         whatsapp_number = add_whatsapp_screen.ids.whatsapp_number.text
         if country_code and whatsapp_number:
@@ -327,8 +356,8 @@ class MainApp(MDApp):
             return
         show_dialog()
 
-    def show_more_options(self):
-        new_entity_screen = self.root.screens[0]
+    def show_more_options(self, screen):
+        new_entity_screen = screen
         more_options_button = new_entity_screen.ids.more_options_button
         #
         more_options_container = new_entity_screen.ids.more_options_container
@@ -349,52 +378,38 @@ class MainApp(MDApp):
         # new_entity_float_layout.height += 400
         create_entity_button.pos_hint = {'center_x': 0.5, 'center_y': .23}
 
+    def show_more_area_options(self, screen):
+        # TODO MAKE THIS WORK PROPERLY
+        ids = screen.ids
+        more_options_button = ids.more_options_button
+        #
+        more_options_container = ids.more_options_container
+        publish_button = ids.publish_button
+        create_group_button = ids.create_group_button
+        agregar_button = ids.agregar_button
+        areas_layout = ids.areas_layout
+        area_container_layout = ids.area_container_layout
+        next_button = ids.next_button
+        back_button = ids.back_button
+        #
+        more_options_container.size_hint_y = 1
+        more_options_container.opacity = 1
+        more_options_button.size_hint_y = 0
+        more_options_button.text = ""
+        publish_button.disabled = False
+        create_group_button.disabled = False
+        #
+        center_y_coef = .4
+        agregar_button.pos_hint["center_y"] -= center_y_coef+.05
+        areas_layout.pos_hint["center_y"] -= center_y_coef
+        area_container_layout.pos_hint["center_y"] -= center_y_coef
+        next_button.pos_hint["center_y"] -= center_y_coef
+        back_button.pos_hint["center_y"] -= center_y_coef
+
     # #### FileManager #### #
     def upload_image(self, touch, image):
-        """
-        Be careful! To use the / path on Android devices, you need special permissions.
-        Therefore, you are likely to get an error.
-        """
         if not image.collide_point(*touch.pos):
             return
-        path = ""
-        operative_system = platform
-        if operative_system == "win":
-            path = 'C:/Users/PC/Downloads/'
-        if operative_system == "linux":
-            path = '/'
-        if operative_system == "android":
-            path = '/'
-        self.file_manager.show(path)  # output manager to the screen
-        self.manager_open = True
-
-    def select_path(self, path):
-        """It will be called when you click on the file name
-        or the catalog selection button.
-
-        :type path: str;
-        :param path: path to the selected directory or file;
-        """
-        new_entity_screen = self.root.screens[0]
-        image_thumbnail = new_entity_screen.ids.image_thumbnail
-        image_thumbnail.source = path
-        self.exit_manager()
-        self.manager_open = False
-        toast(path)
-
-    def exit_manager(self, *args):
-        """Called when the user reaches the root of the directory tree."""
-
-        self.manager_open = False
-        self.file_manager.close()
-
-    def events(self, instance, keyboard, keycode, text, modifiers):
-        """Called when buttons are pressed on the mobile device."""
-
-        if keyboard in (1001, 27):
-            if self.manager_open:
-                self.file_manager.back()
-        return True
 
     def close_app(self):
         self.get_running_app().stop()

@@ -2,78 +2,227 @@
     name: "add_area"
     widget_count : 5
     BaseLayout:
+        title: "Áreas"
         MDFloatLayout:
             PurpleCenteredLabel:
-                text: "Add areas to entity"
+                text: "Agregar áreas"
                 pos_hint:{'center_y': (5/root.widget_count)-coef_y}
             ProgressComponent:
                 step: 2
-            MDGridLayout:
-                cols: 2
-                padding: 19.5
-                size_hint: 1, 0.172
-                pos_hint:{'center_x': 0.5, 'center_y': (4/root.widget_count)-coef_y}
-                PurpleIconButton:
-                    icon: 'pound'
-                CommonTextField:
-                    size_hint_y: 1
-                    id: area_name
-                    hint_text: "Area name"
-                    helper_text_mode: "on_error"
-            PurpleButton:
-                text: "Add"
-                pos_hint:{'center_x': 0.5, 'center_y': (3/root.widget_count)-coef_y}
-                md_bg_color: primary_color
-                text_color: 1, 1, 1, 1
-                on_release:
-                    app.set_areas()
-            PaddingLayout:
-                size_hint: 1, .05
-                pos_hint:{'center_x': 0.5, 'center_y': (2.42/root.widget_count)-coef_y}
+            #
+            ScrollView:
+                canvas.before:
+                    Color:
+                        rgba: 0, 1, 0, opacity_coef
+                    Line:
+                        width: 3
+                        rectangle: self.x, self.y, self.width, self.height
+                id: add_area_scrollview
+                do_scroll_x: False
+                do_scroll_y: True
+                size_hint: 1, None
+                height: root.height-(root.height*.15)
+                pos_hint:{'center_x': 0.5, 'center_y': .3}
                 MDGridLayout:
                     canvas.before:
                         Color:
-                            rgba: 245/255, 245/255, 245/255, 1
-                        Rectangle:
-                            pos: self.pos
-                            size: self.size
-                    rows: 1
-                    MDLabel:
-                        padding: 10, 0
-                        color: primary_color
-                        text: "Areas of"
-            PaddingLayout:
-                id: area_container_layout
-                size_hint: 1, 0
-                pos_hint:{'center_x': 0.5, 'center_y': (1.8/root.widget_count)-coef_y}
-                MDFloatLayout:
-                    canvas.before:
-                        Color:
-                            rgba: scroll_bg_color
-                        Rectangle:
-                            pos: self.pos
-                            size: self.size
-                    id: area_container
-                    ScrollView:
+                            rgba: 0, 0, 1, opacity_coef
+                        Line:
+                            width: 2
+                            rectangle: self.x, self.y, self.width, self.height
+                    id: add_area_scroll_layout
+                    size_hint: 1, None
+                    cols: 1
+                    height: 1000  # ESTE HEIGHT HACE QUE FUNCIONE EL SCROLLVIEW
+                    MDFloatLayout:
                         canvas.before:
                             Color:
-                                rgba: scroll_bg_color
-                            Rectangle:
-                                pos: self.pos
-                                size: self.size
-                        id: scrollview
-                        size_hint: 1, .9
-                        pos_hint:{'center_y': .5, 'x': 0}
-                        do_scroll_x: True
-                        do_scroll_y: False
+                                rgba: 1, 0, 0, opacity_coef
+                            Line:
+                                width: 4
+                                rectangle: self.x, self.y, self.width, self.height
+#                        cols: 2
+#                        padding: 19.5
+#                        size_hint: 1, 0.172
+#                        pos_hint:{'center_x': 0.5, 'center_y': (4/root.widget_count)-coef_y}
+                        id: add_area_float_layout
+                        size_hint: 1, None
+                        height: 400
+                        PaddingLayout:
+                            size_hint: 1, None
+                            height: 60
+#                            pos_hint:{'center_x': 0.5, 'center_y': .9}
+                            pos_hint:{'center_x': 0.5, 'center_y': .91}
+                            PurpleIconButton:
+                                icon: 'pound'
+                                padding: 0, 0, 0, 15
+                            CommonTextField:
+                                size_hint_y: 1
+                                id: area_name
+                                hint_text: "Nombre del área"
+                                helper_text_mode: "on_error"
+
+                        LabelButton:
+                            id: more_options_button
+                            text: "Más opciones"
+    #                            pos_hint:{'center_x': 0.5, 'center_y': .6}
+                            pos_hint:{'center_x': 0.5, 'center_y': .8}
+                            on_release:
+                                app.show_more_area_options(root)
+
+                        # #######
                         MDGridLayout:
-                            id: card_area_cointainer
-                            rows: 1
-                            spacing: 10
-                            size_hint: None, 1
-            LabelButton:
-                text: "Done"
-                pos_hint:{'center_x': 0.5, 'center_y': (1/root.widget_count)-coef_y}
-                on_release:
-                    app.validate_areas()
-                    root.manager.transition.direction = "left"
+                            canvas.before:
+                                Color:
+                                    rgba: 1, 0, 0, opacity_coef
+                                Line:
+                                    width: 4
+                                    rectangle: self.x, self.y, self.width, self.height
+                            rows: 5
+                            pos_hint:{'center_x': 0.5, 'center_y': .3}
+                            size_hint_y: None
+                            height: 0
+                            opacity: 0
+                            id: more_options_container
+                            spacing: 0, 20
+                            ##
+                            PaddingLayout:
+                                canvas.before:
+                                    Color:
+                                        rgba: 0, 1, 1, opacity_coef
+                                    Line:
+                                        width: 1.2
+                                        rectangle: self.x, self.y, self.width, self.height
+                                size_hint: 1, None
+                                height: 40
+                                padding: 19.5, 0, 40, 0
+                                MDLabel:
+#                                    pos_hint:{'center_x': 0.5, 'center_y': .25}
+                                    text: "No publicar"
+                                    color: primary_color
+                                MDSwitch:
+#                                    pos_hint:{'center_x': 0.5, 'center_y': .2}
+                                    id: publish_button
+                                    active: True
+                                    disabled: True
+                                    theme_thumb_color: "Custom"
+                                    theme_thumb_down_color: "Custom"
+                                    thumb_color: primary_color
+                                    thumb_color_down: primary_color
+
+                            PaddingLayout:
+                                canvas.before:
+                                    Color:
+                                        rgba: 0, 1, 1, opacity_coef
+                                    Line:
+                                        width: 1.2
+                                        rectangle: self.x, self.y, self.width, self.height
+                                size_hint: 1, None
+                                height: 40
+                                padding: 19.5, 0, 40, 0
+                                MDLabel:
+#                                    pos_hint:{'center_x': 0.5, 'center_y': .25}
+                                    text: "Crear grupo para miembros"
+                                    color: primary_color
+                                MDSwitch:
+#                                    pos_hint:{'center_x': 0.5, 'center_y': .2}
+                                    id: create_group_button
+                                    active: True
+                                    disabled: True
+                                    theme_thumb_color: "Custom"
+                                    theme_thumb_down_color: "Custom"
+                                    thumb_color: primary_color
+                                    thumb_color_down: primary_color
+
+                            ScrollView:
+                                do_scroll_x: False
+                                do_scroll_y: True
+                                size_hint: 1, None
+                                height: 90
+                                PaddingLayout:
+                                    size_hint: 1, None
+                                    height: 135
+                                    MultilineTextField:
+                                        id: welcome_message
+                                        size_hint_x: 1
+                                        size_hint_y: None
+                                        hint_text: "Mensaje de bienvenida"
+                                        helper_text_mode: "on_error"
+
+                        # #######
+                        PurpleButton:
+                            id: agregar_button
+                            text: "Agregar"
+                            pos_hint:{'center_x': 0.5, 'center_y': (3.5/root.widget_count)-coef_y}
+#                            size_hint_x: .4
+                            md_bg_color: primary_color
+                            text_color: 1, 1, 1, 1
+                            on_release:
+                                app.set_areas()
+                        PaddingLayout:
+                            id: areas_layout
+                            size_hint: 1, .05
+                            pos_hint:{'center_x': 0.5, 'center_y': (2.7/root.widget_count)-coef_y}
+                            MDGridLayout:
+                                canvas.before:
+                                    Color:
+                                        rgba: 245/255, 245/255, 245/255, 1
+                                    Rectangle:
+                                        pos: self.pos
+                                        size: self.size
+                                rows: 1
+                                MDLabel:
+                                    padding: 10, 0
+                                    color: primary_color
+                                    text: "Áreas en"
+
+                        PaddingLayout:
+                            id: area_container_layout
+                            size_hint: 1, 0
+                            pos_hint:{'center_x': 0.5, 'center_y': (2/root.widget_count)-coef_y}
+                            MDFloatLayout:
+                                canvas.before:
+                                    Color:
+                                        rgba: scroll_bg_color
+                                    Rectangle:
+                                        pos: self.pos
+                                        size: self.size
+                                id: area_container
+                                ScrollView:
+                                    canvas.before:
+                                        Color:
+                                            rgba: scroll_bg_color
+                                        Rectangle:
+                                            pos: self.pos
+                                            size: self.size
+                                    id: scrollview
+                                    size_hint: 1, .9
+                                    pos_hint:{'center_y': .5, 'x': 0}
+                                    do_scroll_x: True
+                                    do_scroll_y: False
+                                    MDGridLayout:
+                                        id: card_area_cointainer
+                                        rows: 1
+                                        spacing: 10
+                                        size_hint: None, 1
+                                        MDGridLayout:
+                                            cols: 1
+                                            size_hint_x: None
+                                            width: 2
+                        PurpleButton:
+                            id: next_button
+                            text: "Siguiente"
+                            pos_hint:{'center_x': 0.5, 'center_y': (.9/root.widget_count)-coef_y}
+                            md_bg_color: primary_color
+                            text_color: 1, 1, 1, 1
+            #                size_hint_x: .4
+                            on_release:
+                                app.validate_areas()
+                                root.manager.transition.direction = "left"
+                        LabelButton:
+                            id: back_button
+                            text: "Átras"
+                            pos_hint:{'center_x': 0.5, 'center_y': (0.3/root.widget_count)-coef_y}
+                            on_release:
+                                app.enter_entity_screen()
+                                root.manager.transition.direction = "right"

@@ -1,0 +1,112 @@
+<LoginWindow>:
+    name: "login"
+    user_input: user_input
+    password_input: password_input
+    keepOpen: keepOpen
+    ck_keepOpen:ck_keepOpen
+    newPass:newPass
+    MDBoxLayout:
+        orientation: 'vertical'
+        rows: 2
+        size: root.size
+        padding: 19
+        MDFloatLayout:
+#            rows: 1
+            size_hint_y: None
+            height: 40
+            PurpleIconButton:
+#                theme_text_color: 'Custom'
+#                text_color: 1, 1, 1, 1
+                icon: 'information'
+                pos_hint: {'center_y': .5, 'center_x': .97}
+
+        AnchorLayout:
+            anchor_x:'center'
+            anchor_y:'bottom'
+            size_hint : (1, .15)
+            MDBoxLayout:
+                orientation:'vertical'
+                size_hint_y: .9
+                size_hint_x: .95
+                Image:
+                    id: avatar
+                    size: self.texture_size
+                    source: "images/guazuapp50.png"
+
+        AnchorLayout:
+            anchor_x:'center'
+            anchor_y:'center'
+            size_hint : (1, .85)
+            MDBoxLayout:
+                orientation:'vertical'
+                size_hint_y: .9
+                size_hint_x: .95
+#                size_hint_min_x: 250
+#                size_hint_min_y: 450
+#                size_hint_max_x: 525
+#                size_hint_max_y: 500
+                spacing: 30
+
+#                MDCard:
+#                    elevation: 0
+                MDBoxLayout:
+                    orientation:'vertical'
+                    padding: 0
+                    spacing: 30
+#                    MDLabel:
+#                        size_hint_y:.12
+#                        text:'Ingresar'
+#                        font_style:"H5"
+#                        halign:'center'
+#                        theme_text_color: "Custom"
+#                        text_color: app.theme_cls.primary_color
+                    CommonTextField:
+                        size_hint_x: 1
+                        id: user_input
+                        write_tab: False
+                        hint_text: "Nombre de usuario o email"
+                        helper_text_mode: "on_error"
+                    CommonTextField:
+                        size_hint_x: 1
+                        id: password_input
+                        write_tab: False
+                        hint_text: "Contraseña"
+                        helper_text_mode: "on_error"
+                        password:True
+
+                    BoxLayout:
+                        size_hint_y: None
+                        height: 23
+                        orientation: 'horizontal'
+                        rows: 2
+                        MDCheckbox:
+                            id: ck_keepOpen
+                            pos_hint: {'center_x': 0, 'center_y': 1}
+                            size_hint: None, None
+                            size: "28sp", "28sp"
+                            active: False
+                            selected_color: primary_color
+                        MDTextButton:
+                            pos_hint: {'center_x': 0, 'center_y': 1}
+                            id: keepOpen
+                            text: "Ingresar automáticamente"
+                            color: primary_color
+
+                    PurpleButton:
+                        text: 'Ingresar'
+                        size_hint_x : 1
+                        on_press:
+                            app.login()
+                            root.manager.transition.direction = "left"
+                    LabelButton:
+                        id: newPass
+                        text: "¿ Olvidaste tu contraseña ?"
+                    LabelButton:
+                        pos_hint: {'center_x': .5, 'center_y': .5}
+                        text: 'Registrarse'
+#                        on_release:root.go_to_register()
+
+
+
+
+
