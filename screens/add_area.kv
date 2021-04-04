@@ -154,9 +154,6 @@
                             id: agregar_button
                             text: "Agregar"
                             pos_hint:{'center_x': 0.5, 'center_y': (3.5/root.widget_count)-coef_y}
-#                            size_hint_x: .4
-                            md_bg_color: primary_color
-                            text_color: 1, 1, 1, 1
                             on_release:
                                 app.set_areas()
                         PaddingLayout:
@@ -183,7 +180,7 @@
                             MDFloatLayout:
                                 canvas.before:
                                     Color:
-                                        rgba: scroll_bg_color
+                                        rgba: app.theme_cls.bg_darkest
                                     Rectangle:
                                         pos: self.pos
                                         size: self.size
@@ -191,7 +188,7 @@
                                 ScrollView:
                                     canvas.before:
                                         Color:
-                                            rgba: scroll_bg_color
+                                            rgba: app.theme_cls.bg_darkest
                                         Rectangle:
                                             pos: self.pos
                                             size: self.size
@@ -213,9 +210,6 @@
                             id: next_button
                             text: "Siguiente"
                             pos_hint:{'center_x': 0.5, 'center_y': (.9/root.widget_count)-coef_y}
-                            md_bg_color: primary_color
-                            text_color: 1, 1, 1, 1
-            #                size_hint_x: .4
                             on_release:
                                 app.validate_areas()
                                 root.manager.transition.direction = "left"

@@ -38,8 +38,6 @@
                 id: next_button
                 text: "Agregar"
                 pos_hint:{'center_x': 0.5, 'center_y': (1.85/root.widget_count)-coef_y}
-                md_bg_color: primary_color
-                text_color: 1, 1, 1, 1
                 on_release:
                     app.validate_phone()
                     root.manager.transition.direction = "left"
@@ -47,8 +45,6 @@
                 id: next_button
                 text: "Omitir"
                 pos_hint:{'center_x': 0.5, 'center_y': (1.45/root.widget_count)-coef_y}
-                md_bg_color: primary_color
-                text_color: 1, 1, 1, 1
                 on_release:
                     root.manager.transition.direction = "left"
             LabelButton:

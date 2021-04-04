@@ -8,7 +8,7 @@
     MDGridLayout:
         canvas.before:
             Color:
-                rgba: primary_color
+                rgba: app.theme_cls.primary_color
             Rectangle:
                 pos: self.pos
                 size: self.size
@@ -19,7 +19,7 @@
             width: 70
             MDIconButton:
                 theme_text_color: 'Custom'
-                text_color: 1, 1, 1, 1
+                text_color: app.theme_cls.opposite_text_color
                 icon: 'menu'
                 pos_hint: {'center_y': .5, 'center_x': .4}
         MDFloatLayout:
@@ -30,33 +30,41 @@
                 font_size: '19sp'
                 color: 1, 1, 1, 1
                 pos_hint: {'center_y': .5, 'center_x': .5}
+        # Boton provisorio para cambiar de estilo de tema
         MDFloatLayout:
             size_hint_x: None
             width: 40
             MDIconButton:
                 theme_text_color: 'Custom'
                 text_color: 1, 1, 1, 1
-                icon: 'information'
+                icon: 'palette'
                 pos_hint: {'center_y': .5, 'center_x': .5}
+                on_release:
+                    app.change_theme_style()
+#        MDFloatLayout:
+#            size_hint_x: None
+#            width: 40
+#            MDIconButton:
+#                theme_text_color: 'Custom'
+#                text_color: 1, 1, 1, 1
+#                icon: 'information'
+#                pos_hint: {'center_y': .5, 'center_x': .5}
         MDFloatLayout:
             size_hint_x: None
             width: 40
             MDIconButton:
                 theme_text_color: 'Custom'
-                text_color: 1, 1, 1, 1
+                text_color: app.theme_cls.opposite_text_color
                 icon: root.last_right_icon
                 custom_fn: root.custom_fn
                 pos_hint: {'center_y': .5, 'center_x': .5}
                 on_release:
                     app.close_app() if self.icon == 'close' else self.custom_fn
 
-
+# Ya no se usa porque el Login ya se hizo
 <LoginBaseLayout@MDBoxLayout>:
     id: main_toolbar
-#    title: self.title if self.title else 'GuazuApp'
     orientation: 'vertical'
-#    last_right_icon: self.last_right_icon if self.last_right_icon else "dots-vertical"
-#    custom_fn: self.custom_fn if self.custom_fn else None
     MDGridLayout:
         padding: 19, 0
         rows: 1
@@ -86,16 +94,16 @@
     required: True
     max_text_length: 32
     helper_text: "Este campo es obligatorio"
-    line_color_normal: primary_color
+    line_color_normal: app.theme_cls.primary_color
     color_mode: 'custom'
-    line_color_focus: primary_color
+    line_color_focus: app.theme_cls.primary_color
 
 
 <MultilineTextField@MDTextField>:
     multiline: True
-    line_color_normal: primary_color
+    line_color_normal: app.theme_cls.primary_color
     color_mode: 'custom'
-    line_color_focus: primary_color
+    line_color_focus: app.theme_cls.primary_color
 
 
 <OnlyAlphaNumericTextField@CommonTextField>:
@@ -106,20 +114,20 @@
     size_hint: 0.75, 0.1
     input_filter: 'int'
     color_mode: 'custom'
-    line_color_focus: primary_color
+    line_color_focus: app.theme_cls.primary_color
 
 
 <LabelButton@MDTextButton>:
-    color: primary_color
+    color: app.theme_cls.primary_color
 
 
 <PurpleCenteredLabel@MDLabel>
-    color: primary_color
+    color: app.theme_cls.primary_color
     halign: 'center'
 
 <PurpleButton@MDRaisedButton>
-    md_bg_color: primary_color
-    text_color: 1, 1, 1, 1
+    md_bg_color: app.theme_cls.primary_color
+    text_color: app.theme_cls.text_color
     size_hint_x: .4
     size_hint_y: .08
     size_hint_min_y: 20
@@ -128,14 +136,14 @@
 
 <PurpleIconButton@MDIconButton>
     theme_text_color: 'Custom'
-    text_color: primary_color
+    text_color: app.theme_cls.primary_color
     user_font_size: "18sp"
 
 <AnimatedProgressBar@MDProgressBar>:
     type: "indeterminate"
     running_duration: 1
     catching_duration: 1.5
-    color: primary_color
+    color: app.theme_cls.primary_color
     size_hint: 1, 1
     pos_hint:{'center_y': .5, 'center_x': 0.5}
 
@@ -143,7 +151,7 @@
 <CircularButton>:
     canvas:
         Color:
-            rgb: primary_color if self.active else inactive_color
+            rgb: app.theme_cls.primary_color if self.active else inactive_color
         RoundedRectangle:
             size: (20, 20)
             pos: (self.pos)
@@ -203,7 +211,7 @@
     MDLabel:
         canvas.before:
             Color:
-                rgba: 245/255, 245/255, 245/255, 1
+                rgba: app.theme_cls.bg_light
             Rectangle:
                 pos: self.pos
                 size: self.size
@@ -215,7 +223,7 @@
     MDGridLayout:
         canvas.before:
             Color:
-                rgba: 1, 1, 1, 1
+                rgba: app.theme_cls.bg_light
             Rectangle:
                 pos: self.pos
                 size: self.size
@@ -230,7 +238,7 @@
             ButtonIcon:
                 icon: 'pencil'
                 theme_text_color: 'Custom'
-                text_color: primary_color
+                text_color: app.theme_cls.primary_color
                 halign: 'center'
                 valign: 'middle'
                 on_release:
@@ -259,7 +267,7 @@
     MDGridLayout:
         canvas.before:
             Color:
-                rgba: 245/255, 245/255, 245/255, 1
+                rgba: app.theme_cls.bg_light
             Rectangle:
                 pos: self.pos
                 size: self.size
@@ -286,13 +294,13 @@
     ButtonIcon:
         canvas.before:
             Color:
-                rgba: 1, 1, 1, 1
+                rgba: app.theme_cls.bg_light
             Rectangle:
                 pos: self.pos
                 size: self.size
         icon: 'share-variant'
         theme_text_color: 'Custom'
-        text_color: primary_color
+        text_color: app.theme_cls.primary_color
         halign: 'center'
         valign: 'middle'
 
@@ -305,13 +313,13 @@
             width: 2
             rectangle: self.x, self.y, self.width, self.height
         Color:
-            rgba: primary_color if self.is_active else bg_white_color
+            rgba: app.theme_cls.primary_color if self.is_active else app.theme_cls.bg_light
         Rectangle:
             pos: self.pos
             size: self.size
     rows: 2
     padding: 5
-    channel_name: self.channel_name if self.channel_name else "No name"
+    channel_name: self.channel_name if self.channel_name else "-"
     is_active: self.is_active if self.is_active else False
     icon: self.icon if self.icon else 'whatsapp'
     AnchorLayout:
@@ -320,10 +328,11 @@
         MDIconButton:
             icon: root.icon
             theme_text_color: 'Custom'
-            text_color: white_color if root.is_active else gray_white_color
+            text_color: app.theme_cls.bg_dark if root.is_active else app.theme_cls.bg_darkest
+            # white_color if root.is_active else gray_white_color
     MDLabel:
         text: root.channel_name
-        color: white_color if root.is_active else gray_white_color
+        color: app.theme_cls.bg_dark if root.is_active else app.theme_cls.bg_darkest
         halign: "center"
         size_hint_y: None
         height: 30
@@ -335,7 +344,7 @@
 <ChannelsGrid@MDGridLayout>:
     canvas.before:
         Color:
-            rgba: inactive_color
+            rgba: app.theme_cls.bg_dark
         Line:
             width: 1
             rectangle: self.x, self.y, self.width, self.height

@@ -259,7 +259,7 @@ def show_dialog(msg="Por favor complete todos los campos"):
 # Loading all the kv files
 Builder.load_file('screens/styles.kv')
 Builder.load_file('screens/components.kv')
-Builder.load_file('screens/login.kv')
+# Builder.load_file('screens/login.kv')
 Builder.load_file('screens/new_entity.kv')
 Builder.load_file('screens/add_area.kv')
 Builder.load_file('screens/add_whatsapp.kv')
@@ -275,11 +275,20 @@ class MainApp(MDApp):
         super().__init__(**kwargs)
 
     def build(self):
+        self.theme_cls.primary_palette = "Purple"  # "Purple", "Red"
+        self.theme_cls.theme_style = "Light"
         self.title = 'GuazuApp'
         Window.size = (360, 640)  # more common dimensions for mobiles, delete this for building
         screen = Builder.load_file('content.kv')
-        screen.current = "add_whatsapp"
+        # screen.current = "add_whatsapp"
         return screen
+
+    def change_theme_style(self):
+        theme_style = self.theme_cls.theme_style
+        if theme_style == "Light":
+            self.theme_cls.theme_style = "Dark"
+        else:
+            self.theme_cls.theme_style = "Light"
 
     def login(self):
         # TODO verify credentials
