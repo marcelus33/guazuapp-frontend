@@ -6,9 +6,9 @@
     BaseLayout:
         title: "Entidades"
         MDFloatLayout:
-            PurpleCenteredLabel:
-                text: "Crear nueva entidad"
-                pos_hint:{'center_y': (5/root.widget_count)-coef_y}
+#            PurpleCenteredLabel:
+#                text: "Crear nueva entidad"
+#                pos_hint:{'center_y': (5/root.widget_count)-coef_y}
             ProgressComponent:
                 step: 1
             #
@@ -24,7 +24,7 @@
                 do_scroll_y: True
                 size_hint: 1, None
                 height: root.height-(root.height*.10)
-                pos_hint:{'center_x': 0.5, 'center_y': .3}
+                pos_hint:{'center_x': 0.5, 'center_y': .37}
                 MDGridLayout:
 #                    canvas.before:
 #                        Color:
@@ -114,18 +114,14 @@
                                 height: 40
                                 padding: 19.5, 0, 40, 0
                                 MDLabel:
-#                                    pos_hint:{'center_x': 0.5, 'center_y': .25}
                                     text: "No publicar"
-                                    color: primary_color
+                                    color: app.theme_cls.primary_color
                                 MDSwitch:
-#                                    pos_hint:{'center_x': 0.5, 'center_y': .2}
                                     id: publish_button
                                     active: True
                                     disabled: True
-                                    theme_thumb_color: "Custom"
-                                    theme_thumb_down_color: "Custom"
-                                    thumb_color: primary_color
-                                    thumb_color_down: primary_color
+                                    thumb_color: app.theme_cls.primary_color
+                                    thumb_color_down: app.theme_cls.bg_darkest
 
                             PaddingLayout:
                                 canvas.before:
@@ -140,16 +136,13 @@
                                 MDLabel:
 #                                    pos_hint:{'center_x': 0.5, 'center_y': .25}
                                     text: "Crear grupo para miembros"
-                                    color: primary_color
+                                    color: app.theme_cls.primary_color
                                 MDSwitch:
-#                                    pos_hint:{'center_x': 0.5, 'center_y': .2}
                                     id: create_group_button
                                     active: True
                                     disabled: True
-                                    theme_thumb_color: "Custom"
-                                    theme_thumb_down_color: "Custom"
-                                    thumb_color: primary_color
-                                    thumb_color_down: primary_color
+                                    thumb_color: app.theme_cls.primary_color
+                                    thumb_color_down: app.theme_cls.bg_darkest
 
                             ScrollView:
                                 do_scroll_x: False
@@ -159,7 +152,6 @@
                                 PaddingLayout:
                                     size_hint: 1, None
                                     height: 140
-    #                                padding: 19.5, 0, 40, 0
                                     MultilineTextField:
                                         id: welcome_message
                                         size_hint_x: 1
@@ -178,18 +170,14 @@
                                 height: 40
                                 padding: 19.5, 0, 40, 0
                                 MDLabel:
-#                                    pos_hint:{'center_x': 0.5, 'center_y': .25}
                                     text: "Adjuntar áreas disponibles en el mensaje de bienvenida"
-                                    color: primary_color
+                                    color: app.theme_cls.primary_color
                                 MDSwitch:
-#                                    pos_hint:{'center_x': 0.5, 'center_y': .2}
                                     id: add_areas_button
                                     active: True
                                     disabled: True
-                                    theme_thumb_color: "Custom"
-                                    theme_thumb_down_color: "Custom"
-                                    thumb_color: primary_color
-                                    thumb_color_down: primary_color
+                                    thumb_color: app.theme_cls.primary_color
+                                    thumb_color_down: app.theme_cls.bg_darkest
 
                             PaddingLayout:
                                 canvas.before:
@@ -214,7 +202,7 @@
 #                                    pos_hint:{'center_x': 0.5, 'center_y': .25}
                                     halign: "center"
                                     text: "Subir imagen"
-                                    color: primary_color
+                                    color: app.theme_cls.primary_color
 
                         PurpleButton:
                             id: create_entity_button

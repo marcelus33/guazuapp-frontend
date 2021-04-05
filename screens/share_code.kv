@@ -1,3 +1,4 @@
+#:set share_code_y -0.06
 <ShareCodeWindow>:
     name: "share_code"
     widget_count : 6
@@ -5,37 +6,37 @@
         title: "Suscripciones"
         last_right_icon: 'close'
         MDFloatLayout:
-            PurpleCenteredLabel:
-                text: "Enviar invitación de subscripción"
-                pos_hint:{'center_y': (6/root.widget_count)-coef_y}
+#            PurpleCenteredLabel:
+#                text: "Enviar invitación de subscripción"
+#                pos_hint:{'center_y': (6/root.widget_count)-coef_y}
             ProgressComponent:
                 step: 5
             #
             PaddingLayout:
                 id: mis_entitades_label
                 size_hint: 1, .05
-                pos_hint:{'center_y': (4.6/root.widget_count)-coef_y, 'center_x': .5}
+                pos_hint:{'center_y': (4.6/root.widget_count)-share_code_y, 'center_x': .5}
                 MDGridLayout:
                     canvas.before:
                         Color:
-                            rgba: 245/255, 245/255, 245/255, 1
+                            rgba: app.theme_cls.bg_light
                         Rectangle:
                             pos: self.pos
                             size: self.size
                     rows: 1
                     MDLabel:
                         padding: 10, 0
-                        color: primary_color
+                        color: app.theme_cls.primary_color
                         text: "Mis entidades"
 
             PaddingLayout:
                 id: entidades_container_layout
                 size_hint: 1, .15
-                pos_hint:{'center_x': 0.5, 'center_y': (4/root.widget_count)-coef_y}
+                pos_hint:{'center_x': 0.5, 'center_y': (4/root.widget_count)-share_code_y}
                 MDFloatLayout:
                     canvas.before:
                         Color:
-                            rgba: scroll_bg_color
+                            rgba: app.theme_cls.bg_darkest
                         Rectangle:
                             pos: self.pos
                             size: self.size
@@ -43,7 +44,7 @@
                     ScrollView:
                         canvas.before:
                             Color:
-                                rgba: scroll_bg_color
+                                rgba: app.theme_cls.bg_darkest
                             Rectangle:
                                 pos: self.pos
                                 size: self.size
@@ -65,28 +66,28 @@
             PaddingLayout:
                 id: areas_label
                 size_hint: 1, .05
-                pos_hint:{'center_y': (2.9/root.widget_count)-coef_y, 'center_x': .5}
+                pos_hint:{'center_y': (2.9/root.widget_count)-share_code_y, 'center_x': .5}
                 MDGridLayout:
                     canvas.before:
                         Color:
-                            rgba: 245/255, 245/255, 245/255, 1
+                            rgba: app.theme_cls.bg_light
                         Rectangle:
                             pos: self.pos
                             size: self.size
                     rows: 1
                     MDLabel:
                         padding: 10, 0
-                        color: primary_color
+                        color: app.theme_cls.primary_color
                         text: "Áreas en"
 
             PaddingLayout:
                 id: area_container_layout
                 size_hint: 1, .15
-                pos_hint:{'center_x': 0.5, 'center_y': (2.3/root.widget_count)-coef_y}
+                pos_hint:{'center_x': 0.5, 'center_y': (2.3/root.widget_count)-share_code_y}
                 MDFloatLayout:
                     canvas.before:
                         Color:
-                            rgba: scroll_bg_color
+                            rgba: app.theme_cls.bg_darkest
                         Rectangle:
                             pos: self.pos
                             size: self.size
@@ -94,7 +95,7 @@
                     ScrollView:
                         canvas.before:
                             Color:
-                                rgba: scroll_bg_color
+                                rgba: app.theme_cls.bg_darkest
                             Rectangle:
                                 pos: self.pos
                                 size: self.size

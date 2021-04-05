@@ -280,7 +280,7 @@ class MainApp(MDApp):
         self.title = 'GuazuApp'
         Window.size = (360, 640)  # more common dimensions for mobiles, delete this for building
         screen = Builder.load_file('content.kv')
-        # screen.current = "add_whatsapp"
+        # screen.current = "share_code"
         return screen
 
     def change_theme_style(self):
@@ -316,6 +316,7 @@ class MainApp(MDApp):
         add_area_screen = get_screen_by_name(self.root.screens, "add_area")  # self.root.screens[1]
         area_name = add_area_screen.ids.area_name.text
         area_container_layout = add_area_screen.ids.area_container_layout
+        areas_layout = add_area_screen.ids.areas_layout
         area_container = add_area_screen.ids.area_container
         card_cointainer = add_area_screen.ids.card_area_cointainer
         card_cointainer.bind(minimum_width=card_cointainer.setter('width'))
@@ -324,7 +325,11 @@ class MainApp(MDApp):
             self.areas.append(area_name)
             add_area_screen.ids.area_name.text = ''
             area_container_layout.size_hint = [1, .2]
-            area_container.size_hint_y = .9
+            #
+            areas_layout.size_hint = [1, .05]
+            areas_layout.opacity = 1
+            #
+            area_container.size_hint = [1, .9]
             area_item = CardItem(label_text=area_name)
             area_item.id = uuid.uuid1()
             card_cointainer.add_widget(area_item)
@@ -335,12 +340,19 @@ class MainApp(MDApp):
         print('Edited area was #'+str(area_id))
 
     def delete_area(self, area_id):
+        """
+        Funcion para borrar las areas dentro del scrollview horizontal
+        """
         add_area_screen = get_screen_by_name(self.root.screens, "add_area")  # self.root.screens[1]
         area_container = add_area_screen.ids.area_container
         card_cointainer = add_area_screen.ids.card_area_cointainer
+        areas_layout = add_area_screen.ids.areas_layout
         area_name = None
         #
         for child in card_cointainer.children:
+            # se controla que no sea el GridLayout que se usa como espacio inicial
+            if type(child).__name__ != "CardItem":
+                continue
             if child.id == area_id:
                 area_name = child.label_text
                 card_cointainer.remove_widget(child)
@@ -348,6 +360,8 @@ class MainApp(MDApp):
             self.areas.remove(area_name)
         if len(self.areas) < 1:
             area_container.size_hint = [0, .2]
+            areas_layout.size_hint = [0, .05]
+            areas_layout.opacity = 0
 
     def validate_areas(self):
         areas = self.areas
@@ -391,6 +405,37 @@ class MainApp(MDApp):
         # TODO MAKE THIS WORK PROPERLY
         ids = screen.ids
         more_options_button = ids.more_options_button
+        if more_options_button.text == "Más opciones":
+            #
+            more_options_container = ids.more_options_container
+            publish_button = ids.publish_button
+            create_group_button = ids.create_group_button
+            agregar_button = ids.agregar_button
+            areas_layout = ids.areas_layout
+            area_container_layout = ids.area_container_layout
+            next_button = ids.next_button
+            back_button = ids.back_button
+            #
+            more_options_container.size_hint_y = 1
+            more_options_container.opacity = 1
+            more_options_button.size_hint_x = .33
+            more_options_button.text = "Menos opciones"
+            #
+            publish_button.disabled = False
+            create_group_button.disabled = False
+            #
+            center_y_coef = .6
+            # agregar_button.pos_hint["center_y"] -= center_y_coef  # +.05
+            # areas_layout.pos_hint["center_y"] -= center_y_coef
+            # area_container_layout.pos_hint["center_y"] -= center_y_coef
+            next_button.pos_hint["center_y"] -= center_y_coef
+            back_button.pos_hint["center_y"] -= center_y_coef
+        else:
+            self.show_less_area_options(screen)
+
+    def show_less_area_options(self, screen):
+        ids = screen.ids
+        more_options_button = ids.more_options_button
         #
         more_options_container = ids.more_options_container
         publish_button = ids.publish_button
@@ -401,17 +446,18 @@ class MainApp(MDApp):
         next_button = ids.next_button
         back_button = ids.back_button
         #
-        more_options_container.size_hint_y = 1
-        more_options_container.opacity = 1
-        more_options_button.size_hint_y = 0
-        more_options_button.text = ""
+        more_options_container.size_hint_y = 0
+        more_options_container.opacity = 0
+        more_options_button.size_hint_x = .29
+        more_options_button.text = "Más opciones"
+        #
         publish_button.disabled = False
         create_group_button.disabled = False
         #
-        center_y_coef = .4
-        agregar_button.pos_hint["center_y"] -= center_y_coef+.05
-        areas_layout.pos_hint["center_y"] -= center_y_coef
-        area_container_layout.pos_hint["center_y"] -= center_y_coef
+        center_y_coef = -.6
+        # agregar_button.pos_hint["center_y"] -= center_y_coef  # +.05
+        # areas_layout.pos_hint["center_y"] -= center_y_coef
+        # area_container_layout.pos_hint["center_y"] -= center_y_coef
         next_button.pos_hint["center_y"] -= center_y_coef
         back_button.pos_hint["center_y"] -= center_y_coef
 

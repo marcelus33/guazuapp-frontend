@@ -28,7 +28,7 @@
                 markup: True
                 shorten: True
                 font_size: '19sp'
-                color: 1, 1, 1, 1
+                color: app.theme_cls.opposite_text_color
                 pos_hint: {'center_y': .5, 'center_x': .5}
         # Boton provisorio para cambiar de estilo de tema
         MDFloatLayout:
@@ -86,14 +86,12 @@
                 pos_hint: {'center_y': .5, 'center_x': .97}
 
 
-<CommonTextField@MDTextField>:
+<CommonTextField>:
     size_hint: 0.75, 0.1
     size_hint_min_y: 55
     size_hint_max_y: 65
     multiline: False
-    required: True
     max_text_length: 32
-    helper_text: "Este campo es obligatorio"
     line_color_normal: app.theme_cls.primary_color
     color_mode: 'custom'
     line_color_focus: app.theme_cls.primary_color
@@ -101,16 +99,20 @@
 
 <MultilineTextField@MDTextField>:
     multiline: True
-    line_color_normal: app.theme_cls.primary_color
     color_mode: 'custom'
+    line_color_normal: app.theme_cls.primary_color
     line_color_focus: app.theme_cls.primary_color
+#    mode: "fill"
+#    fill_color: app.theme_cls.primary_light
 
 
-<OnlyAlphaNumericTextField@CommonTextField>:
-<ReplicableTextField@CommonTextField>:
+<OnlyAlphaNumericTextField>:
 
 
-<NumericField@CommonTextField>:
+<ReplicableTextField>:
+
+
+<NumericField>:
     size_hint: 0.75, 0.1
     input_filter: 'int'
     color_mode: 'custom'
@@ -125,6 +127,7 @@
     color: app.theme_cls.primary_color
     halign: 'center'
 
+
 <PurpleButton@MDRaisedButton>
     md_bg_color: app.theme_cls.primary_color
     text_color: app.theme_cls.text_color
@@ -132,19 +135,19 @@
     size_hint_y: .08
     size_hint_min_y: 20
     size_hint_max_y: 33
-    elevation: 10
+
 
 <PurpleIconButton@MDIconButton>
     theme_text_color: 'Custom'
     text_color: app.theme_cls.primary_color
     user_font_size: "18sp"
 
+
 <AnimatedProgressBar@MDProgressBar>:
     type: "indeterminate"
     running_duration: 1
     catching_duration: 1.5
     color: app.theme_cls.primary_color
-    size_hint: 1, 1
     pos_hint:{'center_y': .5, 'center_x': 0.5}
 
 
@@ -177,7 +180,7 @@
     steps: 5
     step: 0
     padding: 19.5, 0
-    pos_hint:{'center_y': (4.9/root.steps)-0.1, 'center_x': 0.5}
+    pos_hint:{'center_y': (5.2/root.steps)-0.1, 'center_x': 0.5}
     DotLayout:
         CircularButton:
             id: step_1
@@ -200,7 +203,7 @@
 <ButtonIcon@ButtonBehavior+MDIcon>:
 
 
-<CardItem@MDGridLayout>:
+<CardItem>:
     rows: 1
     cols: 2
     size_hint: None, 1
@@ -255,7 +258,7 @@
                     app.delete_area(root.id)
 
 
-<ShareCard@MDGridLayout>:
+<ShareCard>:
     rows: 1
     cols: 2
     size_hint: None, 1
@@ -305,7 +308,7 @@
         valign: 'middle'
 
 
-<ChannelLayout@MDGridLayout>:
+<ChannelLayout>:
     canvas.before:
         Color:
             rgba: inactive_color
