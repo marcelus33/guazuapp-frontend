@@ -280,7 +280,7 @@ class MainApp(MDApp):
         self.title = 'GuazuApp'
         Window.size = (360, 640)  # more common dimensions for mobiles, delete this for building
         screen = Builder.load_file('content.kv')
-        # screen.current = "share_code"
+        # screen.current = "add_area"
         return screen
 
     def change_theme_style(self):
@@ -324,7 +324,7 @@ class MainApp(MDApp):
         if area_name:
             self.areas.append(area_name)
             add_area_screen.ids.area_name.text = ''
-            area_container_layout.size_hint = [1, .2]
+            area_container_layout.size_hint = [1, .21]
             #
             areas_layout.size_hint = [1, .05]
             areas_layout.opacity = 1
